@@ -36,9 +36,9 @@ export function HeroSection() {
                 tagline="Join 500+ Leaders and Innovators"
                 title={
                     <>
-                        Find Your Balance
+                        Slow Down. Breathe In.
                         <br />
-                        Shape the Future
+                        Begin Again.
                     </>
                 }
                 description="The premier conference for visionaries seeking harmony between innovation and wellbeing. Connect with industry leaders, discover breakthrough ideas, and transform your approach to work and life."

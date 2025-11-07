@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-general-sans)', 'sans-serif'],
+      },
       aspectRatio: {
         '3/4': '3 / 4',
       },
