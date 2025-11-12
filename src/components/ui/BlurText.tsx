@@ -31,7 +31,7 @@ const BlurText = ({
   // Group letters by words when animating by letters to prevent word breaking
   const processElements = useMemo(() => {
     const textSegments = segments || [{ text, color: undefined, lineBreak: false }];
-    const result = [];
+    const result: any[] = [];
     let globalIndex = 0;
     let globalLetterIndex = 0;
 
