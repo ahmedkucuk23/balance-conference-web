@@ -24,10 +24,10 @@ const BlurText = ({
   rootMargin = '0px',
   animationFrom,
   animationTo,
-  easing = t => t,
+  easing = (t: number) => t,
   onAnimationComplete = undefined,
   stepDuration = 0.35
-}) => {
+}: any) => {
   // Group letters by words when animating by letters to prevent word breaking
   const processElements = useMemo(() => {
     const textSegments = segments || [{ text, color: undefined, lineBreak: false }];
