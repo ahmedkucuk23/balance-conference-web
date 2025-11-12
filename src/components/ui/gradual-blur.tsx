@@ -4,6 +4,34 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 
 import './gradual-blur.css';
 
+interface GradualBlurProps {
+  target?: string;
+  position?: string;
+  height?: string;
+  strength?: number;
+  divCount?: number;
+  opacity?: number;
+  zIndex?: number;
+  exponential?: boolean;
+  animated?: boolean | string;
+  duration?: string;
+  easing?: string;
+  curve?: string;
+  responsive?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+  preset?: string;
+  hoverIntensity?: number;
+  onAnimationComplete?: () => void;
+  width?: string;
+  mobileHeight?: string;
+  tabletHeight?: string;
+  desktopHeight?: string;
+  mobileWidth?: string;
+  tabletWidth?: string;
+  desktopWidth?: string;
+}
+
 const DEFAULT_CONFIG = {
   position: 'bottom',
   strength: 2,
@@ -39,31 +67,31 @@ const PRESETS = {
 };
 
 const CURVE_FUNCTIONS = {
-  linear: p => p,
-  bezier: p => p * p * (3 - 2 * p),
-  'ease-in': p => p * p,
-  'ease-out': p => 1 - Math.pow(1 - p, 2),
-  'ease-in-out': p => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2)
+  linear: (p: number) => p,
+  bezier: (p: number) => p * p * (3 - 2 * p),
+  'ease-in': (p: number) => p * p,
+  'ease-out': (p: number) => 1 - Math.pow(1 - p, 2),
+  'ease-in-out': (p: number) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2)
 };
 
-const mergeConfigs = (...configs) => configs.reduce((acc, c) => ({ ...acc, ...c }), {});
-const getGradientDirection = position =>
+const mergeConfigs = (...configs: any[]) => configs.reduce((acc, c) => ({ ...acc, ...c }), {});
+const getGradientDirection = (position: any) =>
   ({
     top: 'to top',
     bottom: 'to bottom',
     left: 'to left',
     right: 'to right'
-  })[position] || 'to bottom';
+  } as any)[position] || 'to bottom';
 
-const debounce = (fn, wait) => {
-  let t;
-  return (...a) => {
+const debounce = (fn: any, wait: any) => {
+  let t: any;
+  return (...a: any[]) => {
     clearTimeout(t);
     t = setTimeout(() => fn(...a), wait);
   };
 };
 
-const useResponsiveDimension = (responsive, config, key) => {
+const useResponsiveDimension = (responsive: any, config: any, key: any) => {
   const [value, setValue] = useState(config[key]);
   useEffect(() => {
     if (!responsive) return;
@@ -86,7 +114,7 @@ const useResponsiveDimension = (responsive, config, key) => {
   return responsive ? value : config[key];
 };
 
-const useIntersectionObserver = (ref, shouldObserve = false) => {
+const useIntersectionObserver = (ref: any, shouldObserve = false) => {
   const [isVisible, setIsVisible] = useState(!shouldObserve);
 
   useEffect(() => {
@@ -101,12 +129,12 @@ const useIntersectionObserver = (ref, shouldObserve = false) => {
   return isVisible;
 };
 
-function GradualBlur(props) {
+function GradualBlur(props: GradualBlurProps) {
   const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
 
   const config = useMemo(() => {
-    const presetConfig = props.preset && PRESETS[props.preset] ? PRESETS[props.preset] : {};
+    const presetConfig = props.preset && (PRESETS as any)[props.preset] ? (PRESETS as any)[props.preset] : {};
     return mergeConfigs(DEFAULT_CONFIG, presetConfig, props);
   }, [props]);
 
@@ -121,7 +149,7 @@ function GradualBlur(props) {
     const currentStrength =
       isHovered && config.hoverIntensity ? config.strength * config.hoverIntensity : config.strength;
 
-    const curveFunc = CURVE_FUNCTIONS[config.curve] || CURVE_FUNCTIONS.linear;
+    const curveFunc = (CURVE_FUNCTIONS as any)[config.curve] || CURVE_FUNCTIONS.linear;
 
     for (let i = 1; i <= config.divCount; i++) {
       let progress = i / config.divCount;
@@ -145,7 +173,7 @@ function GradualBlur(props) {
 
       const direction = getGradientDirection(config.position);
 
-      const divStyle = {
+      const divStyle: any = {
         position: 'absolute',
         inset: '0',
         maskImage: `linear-gradient(${direction}, ${gradient})`,
@@ -228,7 +256,10 @@ function GradualBlur(props) {
   );
 }
 
-const GradualBlurMemo = React.memo(GradualBlur);
+const GradualBlurMemo = React.memo(GradualBlur) as unknown as React.NamedExoticComponent<GradualBlurProps> & {
+  PRESETS: typeof PRESETS;
+  CURVE_FUNCTIONS: typeof CURVE_FUNCTIONS;
+};
 GradualBlurMemo.displayName = 'GradualBlur';
 GradualBlurMemo.PRESETS = PRESETS;
 GradualBlurMemo.CURVE_FUNCTIONS = CURVE_FUNCTIONS;
