@@ -3,12 +3,12 @@
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState, useMemo } from 'react';
 
-const buildKeyframes = (from, steps) => {
-  const keys = new Set([...Object.keys(from), ...steps.flatMap(s => Object.keys(s))]);
+const buildKeyframes = (from: any, steps: any) => {
+  const keys = new Set([...Object.keys(from), ...steps.flatMap((s: any) => Object.keys(s))]);
 
-  const keyframes = {};
+  const keyframes: any = {};
   keys.forEach(k => {
-    keyframes[k] = [from[k], ...steps.map(s => s[k])];
+    keyframes[k] = [from[k], ...steps.map((s: any) => s[k])];
   });
   return keyframes;
 };
