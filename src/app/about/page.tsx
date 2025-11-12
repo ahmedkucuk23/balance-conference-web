@@ -31,20 +31,34 @@ type Testimonial = {
 
 async function getSpeakerTestimonials(): Promise<Testimonial[]> {
   const speakers = await (db as any).speaker.findMany({
-    where: { 
+    where: {
       published: true,
       quote: { not: null }
     },
     orderBy: { createdAt: 'desc' },
     take: 10
   })
-  
-  return (speakers as any[]).map((s: any) => ({
+
+  const testimonials = (speakers as any[]).map((s: any) => ({
     quote: s.quote || '',
     name: s.name,
     designation: s.shortDescription || s.location || 'Speaker',
     src: s.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1066&fit=crop'
   }))
+
+  // Return fallback testimonials if no speakers found
+  if (testimonials.length === 0) {
+    return [
+      {
+        quote: "Balance Conference has been a transformative experience for our community.",
+        name: "Featured Speaker",
+        designation: "Balance Conference",
+        src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1066&fit=crop"
+      }
+    ]
+  }
+
+  return testimonials
 }
 
 const testimonialsColumns: TestimonialColumnType[] = [
