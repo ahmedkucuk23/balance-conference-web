@@ -154,6 +154,8 @@ export default function ConferencesPage() {
               delay={80}
               animateBy="words"
               direction="top"
+              animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
+              animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
               className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto"
             />
           </div>
@@ -171,6 +173,8 @@ export default function ConferencesPage() {
                 delay={80}
                 animateBy="words"
                 direction="top"
+                animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
+                animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
                 className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto"
               />
             </div>
@@ -189,6 +193,8 @@ export default function ConferencesPage() {
                 delay={80}
                 animateBy="words"
                 direction="top"
+                animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
+                animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
                 className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto text-left lg:text-right"
               />
             </div>
@@ -213,6 +219,8 @@ export default function ConferencesPage() {
                 delay={40}
                 animateBy="letters"
                 direction="top"
+                animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -20 } as any}
+                animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
                 className="text-6xl md:text-6xl tracking-tight font-thin italic text-accent-second text-center font-serif-display"
               />
             </div>
