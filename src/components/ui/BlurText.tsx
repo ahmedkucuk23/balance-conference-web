@@ -180,7 +180,7 @@ const BlurText = ({
 
             return (
               <span key={`word-${element.wordIndex}`} className="inline-block whitespace-nowrap" style={element.color ? { color: element.color } : undefined}>
-                {element.letters.map((letter, letterIdx) => {
+                {element.letters.map((letter: any, letterIdx: any) => {
                   const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
                   const globalLetterIndex = letterCount + letterIdx;
                   const spanTransition: any = {
