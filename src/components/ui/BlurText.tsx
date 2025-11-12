@@ -35,14 +35,14 @@ const BlurText = ({
     let globalIndex = 0;
     let globalLetterIndex = 0;
 
-    textSegments.forEach((segment, segmentIdx) => {
+    textSegments.forEach((segment: any, segmentIdx: any) => {
       if (segment.lineBreak && result.length > 0) {
         result.push({ type: 'break' });
       }
 
       if (animateBy === 'words') {
         const words = segment.text.split(' ');
-        words.forEach((word, wordIdx) => {
+        words.forEach((word: any, wordIdx: any) => {
           result.push({
             type: 'word',
             content: word,
@@ -52,11 +52,11 @@ const BlurText = ({
         });
       } else {
         const words = segment.text.split(' ');
-        words.forEach((word, wordIndex) => {
+        words.forEach((word: any, wordIndex: any) => {
           const letters = word.split('');
           result.push({
             type: 'word-group',
-            letters: letters.map((letter, letterIndex) => ({
+            letters: letters.map((letter: any, letterIndex: any) => ({
               content: letter,
               globalIndex: globalLetterIndex++
             })),
