@@ -62,7 +62,7 @@ export default async function SpeakersPage() {
           <h1 className="text-5xl md:text-6xl font-bold text-white text-center mb-4">
             Our Past Speakers
           </h1>
-          <p className="text-2xl text-balance-100 text-center">
+          <p className="text-2xl text-balance-200 text-center">
             Leading voices in wellbeing, leadership, and lifestyle innovation
           </p>
         </div>

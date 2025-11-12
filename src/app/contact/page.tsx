@@ -96,13 +96,10 @@ export default function ContactPage() {
           backgroundColor: 'rgba(10, 3, 27, 0.5)',
           backdropFilter: 'blur(12px)',
         }}
-        className="w-full relative z-10 pt-32 pb-16"
+        className="w-full relative z-10 pt-40 pb-24"
       >
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <div className="inline-block mb-6 px-4 py-2 rounded-full border border-balance-200/30 text-balance-100 text-sm">
-            Contact
-          </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             We'd Love to Hear From You
           </h1>
           <p className="text-xl md:text-2xl text-balance-100 max-w-3xl mx-auto">
@@ -115,13 +112,13 @@ export default function ContactPage() {
       <section
         className="relative z-10 py-16 md:py-24"
         style={{
-          backgroundColor: 'rgba(10, 3, 27, 0.9)',
-          backdropFilter: 'blur(12px)',
+          backgroundColor: 'rgba(10, 3, 27, 0.5)',
+          backdropFilter: 'blur(24px)',
         }}
       >
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+        <div className="mx-auto max-w-6xl px-6 lg:px-12 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0">
             {/* Left Column - Company Info */}
             <div className="space-y-8">
               {/* Logo */}
@@ -130,7 +127,7 @@ export default function ContactPage() {
                   src="/assets/img/mita-logo.png"
                   alt="Mita Group"
                   width={400}
-                  height={120}
+                  height={340}
                   className="w-full h-auto"
                   priority
                 />
@@ -166,7 +163,7 @@ export default function ContactPage() {
             </div>
 
             {/* Right Column - Contact Form */}
-            <div className="bg-balance-500 border border-balance-200/20 rounded-2xl box-shadow-lg p-8 md:p-10">
+            <div className="bg-balance-400/20 border border-balance-200/20 rounded-2xl shadow-2xl p-8 md:p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name Field */}
                 <div className="space-y-2">
@@ -181,7 +178,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="h-12 text-base bg-[#0A031B]/40 border-balance-200/30 text-white placeholder:text-balance-200/50 focus:bg-[#0A031B]/60 focus:border-balance-300/50"
+                    className="h-12 text-lg bg-balance-500/40 border-balance-200/30 text-white placeholder:text-balance-100/50 focus:bg-balance-500/60 focus:border-balance-300/50"
                   />
                 </div>
 
@@ -198,7 +195,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="h-12 text-base bg-[#0A031B]/40 border-balance-200/30 text-white placeholder:text-balance-200/50 focus:bg-[#0A031B]/60 focus:border-balance-300/50"
+                    className="h-12 text-lg bg-balance-500/40 border-balance-200/30 text-white placeholder:text-balance-100/50 focus:bg-balance-500/60 focus:border-balance-300/50"
                   />
                 </div>
 
@@ -215,7 +212,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="text-base bg-[#0A031B]/40 border-balance-200/30 text-white placeholder:text-balance-200/50 focus:bg-[#0A031B]/60 focus:border-balance-300/50 resize-none"
+                    className="text-lg bg-balance-500/40 border-balance-200/30 text-white placeholder:text-balance-100/50 focus:bg-balance-500/60 focus:border-balance-300/50 resize-none"
                   />
                 </div>
 
@@ -223,7 +220,7 @@ export default function ContactPage() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-12 text-base font-semibold bg-balance-300 hover:bg-balance-400 text-white rounded-lg transition-all"
+                  className="w-full h-12 text-lg font-medium bg-balance-300 hover:bg-balance-400 text-white rounded-lg transition-all"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>

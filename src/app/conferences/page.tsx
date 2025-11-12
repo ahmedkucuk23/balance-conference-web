@@ -132,7 +132,7 @@ export default function ConferencesPage() {
           <h1 className="text-5xl md:text-6xl font-bold text-white text-center mb-4">
             Sarajevo Conference 2025
           </h1>
-          <p className="text-2xl text-muted text-center">
+          <p className="text-2xl text-balance-200 text-center">
             May 22, 2025
           </p>
         </div>
@@ -189,7 +189,7 @@ export default function ConferencesPage() {
                 delay={80}
                 animateBy="words"
                 direction="top"
-                className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto text-right"
+                className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto text-left lg:text-right"
               />
             </div>
           </div>

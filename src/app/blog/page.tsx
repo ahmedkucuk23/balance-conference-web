@@ -78,16 +78,13 @@ export default function BlogPage() {
 					backgroundColor: 'rgba(10, 3, 27, 0.5)',
 					backdropFilter: 'blur(12px)',
 				}}
-				className="w-full relative z-10 pt-32 pb-16"
+				className="w-full relative z-10 pt-40 pb-24"
 			>
 				<div className="mx-auto max-w-7xl px-6 text-center">
-					<div className="inline-block mb-6 px-4 py-2 rounded-full border border-balance-200/30 text-balance-100 text-sm">
-						Blog
-					</div>
-					<h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+					<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
 						Insights & Stories
 					</h1>
-					<p className="text-xl md:text-2xl text-balance-100 max-w-3xl mx-auto">
+					<p className="text-xl md:text-2xl text-balance-200 max-w-3xl mx-auto">
 						Discover the latest perspectives on balance, wellness, and personal growth from our community
 					</p>
 				</div>

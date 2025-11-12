@@ -142,7 +142,7 @@ export default async function SpeakerPage({
               <p className="text-xl md:text-2xl text-white">
                 {record.location ?? ''}
               </p>
-              <p className="text-lg md:text-xl text-balance-100 max-w-2xl">
+              <p className="text-lg md:text-xl text-balance-200 max-w-2xl">
                 {record.shortDescription ?? ''}
               </p>
               
