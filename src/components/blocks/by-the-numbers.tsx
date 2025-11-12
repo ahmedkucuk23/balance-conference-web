@@ -70,6 +70,8 @@ export const ByTheNumbers = ({
           delay={40}
           animateBy="words"
           direction="top"
+          animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
+          animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
           className="text-5xl md:text-6xl font-bold text-white mb-16"
         />
 
