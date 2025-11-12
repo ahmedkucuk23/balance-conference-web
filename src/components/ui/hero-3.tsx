@@ -4,12 +4,14 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface AnimatedMarqueeHeroProps {
   tagline: string;
   title: React.ReactNode;
   description: string;
   ctaText: string;
+  ctaLink?: string;
   images: string[];
   className?: string;
 }
@@ -19,6 +21,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
   title,
   description,
   ctaText,
+  ctaLink,
   images,
   className,
 }) => {
@@ -90,9 +93,11 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           variants={FADE_IN_ANIMATION_VARIANTS}
           transition={{ delay: 0.6 }}
         >
-          <Button size="lg" className="bg-balance-300 hover:bg-balance-400 text-white mt-8 rounded-lg">
-            {ctaText}
-          </Button>
+          <Link href={ctaLink || "#"}>
+            <Button size="lg" className="bg-balance-300 hover:bg-balance-400 text-white mt-8 rounded-lg">
+              {ctaText}
+            </Button>
+          </Link>
         </motion.div>
       </div>
 

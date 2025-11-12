@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/blocks/hero-section-5";
 import { AnimatedMarqueeHero } from "@/components/ui/hero-3";
 import SarajevoConference from "@/components/blocks/sarajevo-conference";
 import { PastSpeakers } from "@/components/blocks/past-speakers";
+import { BlogSection } from "@/components/ui/blog-section";
 import { HoverFooter } from "@/components/ui/hover-footer";
 import GradualBlur from "@/components/ui/gradual-blur";
 
@@ -43,11 +44,27 @@ export default function Home() {
           </>
         }
         description="The premier conference for visionaries seeking harmony between innovation and wellbeing. Connect with industry leaders, discover breakthrough ideas, and transform your approach to work and life."
-        ctaText="Register Now"
+        ctaText="Check Out What Happened Last Year"
+        ctaLink="/conferences"
         images={CONFERENCE_IMAGES}
       />
       <SarajevoConference />
       <PastSpeakers />
+      
+      {/* Latest Insights Section */}
+
+<section className="w-full bg-balance-500 backdrop-blur-sm">
+      <section className="mx-auto max-w-6xl relative z-10 py-16">
+        <BlogSection
+          heading="Latest Insights"
+          description="Explore articles on balance, wellness, and personal growth from our community."
+          desktopColumns={3}
+          tabletColumns={3}
+          mobileColumns={1}
+        />
+      </section>
+    </section>
+      
       <HoverFooter />
     </>
   );

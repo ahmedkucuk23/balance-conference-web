@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Trash2, Edit } from "lucide-react"
+import { Plus, Trash2, Edit, Users } from "lucide-react"
 
 type Speaker = {
   id: string
@@ -376,55 +376,77 @@ export default function SpeakersPage() {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {speakers.length === 0 ? (
-          <div className="text-balance-200 text-center py-12">
+          <div className="text-balance-200 text-center py-12 col-span-full">
             No speakers found. Add your first speaker!
           </div>
         ) : (
           speakers.map((speaker) => (
             <div
               key={speaker.id}
-              className="bg-[#0A031B]/80 backdrop-blur-sm border border-balance-200/20 rounded-xl p-6"
+              className="bg-[#0A031B]/80 backdrop-blur-sm border border-balance-200/20 rounded-xl overflow-hidden hover:border-balance-300/40 transition-colors"
             >
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-white mb-2">{speaker.name}</h3>
-                  {speaker.location && (
-                    <p className="text-balance-200 mb-2">{speaker.location}</p>
-                  )}
-                  {speaker.shortDescription && (
-                    <p className="text-balance-300 mb-2">{speaker.shortDescription}</p>
-                  )}
-                  <div className="flex gap-2 mt-4">
+              {/* Image Preview */}
+              {speaker.image ? (
+                <div className="relative w-full aspect-[3/4] bg-balance-900">
+                  <img
+                    src={speaker.image}
+                    alt={speaker.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="relative w-full aspect-[3/4] bg-balance-900 flex items-center justify-center">
+                  <Users className="w-16 h-16 text-balance-400" />
+                </div>
+              )}
+              
+              {/* Content */}
+              <div className="p-4">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-white mb-1">{speaker.name}</h3>
+                    {speaker.location && (
+                      <p className="text-sm text-balance-200 mb-2">{speaker.location}</p>
+                    )}
+                  </div>
+                </div>
+                
+                {speaker.shortDescription && (
+                  <p className="text-sm text-balance-100 mb-3 line-clamp-2">{speaker.shortDescription}</p>
+                )}
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-2">
                     {speaker.published ? (
-                      <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-sm">
+                      <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
                         Published
                       </span>
                     ) : (
-                      <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-sm">
+                      <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">
                         Draft
                       </span>
                     )}
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEdit(speaker)}
-                    className="text-balance-200 hover:text-white"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDelete(speaker.id)}
-                    className="text-red-400 hover:text-red-300"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEdit(speaker)}
+                      className="h-8 w-8 text-balance-200 hover:text-white"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(speaker.id)}
+                      className="h-8 w-8 text-red-400 hover:text-red-300"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

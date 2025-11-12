@@ -8,53 +8,10 @@ import { HoverFooter } from '@/components/ui/hover-footer'
 import GradualBlur from '@/components/ui/gradual-blur'
 import { CircularTestimonials } from '@/components/ui/circular-testimonials'
 import { TestimonialsColumn, type Testimonial as TestimonialColumnType } from '@/components/ui/testimonials-columns-1'
+import { ByTheNumbers } from '@/components/blocks/by-the-numbers'
+import { BlogSection } from '@/components/ui/blog-section'
 import { motion } from 'motion/react'
-
-type Testimonial = {
-  quote: string
-  name: string
-  designation: string
-  src: string
-}
-
-const testimonials: Testimonial[] = [
-  {
-    quote: "Balance Conference 2025 was a transformative experience. The thoughtful curation of speakers and workshops created a space where I could truly explore what balance means in my own life. It's rare to find an event that addresses both professional growth and personal wellbeing with such depth.",
-    name: 'Marija Sinanović',
-    designation: 'Entrepreneur & Leadership Coach',
-    src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&h=1066&fit=crop'
-  },
-  {
-    quote: "What struck me most was the authenticity of the conversations. This wasn't just another conference—it was a genuine gathering of people committed to living more intentionally. The connections I made here continue to influence my work and personal journey.",
-    name: 'Akan Abdula',
-    designation: 'Brand Strategist & Author',
-    src: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=800&h=1066&fit=crop'
-  },
-  {
-    quote: "As someone who studies the brain and human behavior, I was impressed by how Balance Conference integrated scientific insights with practical wisdom. The sessions on neuroscience and wellbeing were particularly enlightening, bridging research and real-world application.",
-    name: 'Dr. Bilgin Sait',
-    designation: 'Neuroscientist & Educator',
-    src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&h=1066&fit=crop'
-  },
-  {
-    quote: "The holistic approach to wellness at this conference was refreshing. From nutrition workshops to mindfulness practices, every aspect of balance was explored. I left with actionable strategies that I've integrated into both my professional practice and personal life.",
-    name: 'Prof. dr. Maja Volk',
-    designation: 'Nutritionist & Wellness Expert',
-    src: 'https://images.unsplash.com/photo-1544006659-f0b21884ce1d?w=800&h=1066&fit=crop'
-  },
-  {
-    quote: "Balance Conference created a safe space for vulnerability and growth. The mindfulness sessions were beautifully designed, and the community that formed over those two days was truly special. This is the kind of event that changes how you see yourself and your potential.",
-    name: 'Anya Patel',
-    designation: 'Mindfulness Teacher',
-    src: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=800&h=1066&fit=crop'
-  },
-  {
-    quote: "The intersection of psychology, leadership, and personal development at Balance Conference was exactly what I needed. The speakers brought diverse perspectives, and the interactive format allowed for meaningful dialogue. I've recommended it to colleagues and clients alike.",
-    name: 'David Chen',
-    designation: 'Organizational Psychologist',
-    src: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?w=800&h=1066&fit=crop'
-  },
-]
+import { testimonials, type Testimonial } from '@/components/ui/testimonials'
 
 const testimonialsColumns: TestimonialColumnType[] = [
   {
@@ -240,7 +197,7 @@ export default function ConferencesPage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Speakers Testimonials Section */}
       <section className="relative z-10 py-16">
         <div className="mx-auto max-w-8xl px-6 lg:px-12 flex items-center justify-center">
           <CircularTestimonials
@@ -263,15 +220,18 @@ export default function ConferencesPage() {
         </div>
       </section>
 
-      {/* Testimonials Columns Section */}
+      {/* By The Numbers Section */}
+      <ByTheNumbers />
+
+      {/* Attendees Testimonials Columns Section */}
       <section className="relative z-10 py-16" style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }}>
-        <div className="container z-10 mx-auto max-w-7xl px-6 lg:px-12">
+        <div className="container z-10 mx-auto max-w-7xl px-6 lg:px-16">
           <motion.div
             initial={{ opacity: 0, y: 80 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="flex flex-col items-center justify-center max-w-[540px] mx-auto mb-10"
+            className="flex flex-col items-start justify-center mx-auto mb-10"
           >
             <div className="flex justify-center">
               <div className="border border-balance-200/30 py-1 px-4 rounded-lg text-balance-100 text-sm">Testimonials</div>
@@ -284,12 +244,23 @@ export default function ConferencesPage() {
             </p>
           </motion.div>
 
-          <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+          <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[720px] overflow-hidden">
             <TestimonialsColumn testimonials={firstColumn} duration={15} />
             <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
             <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
           </div>
         </div>
+      </section>
+
+      {/* Latest Insights Section */}
+      <section className="relative max-w-6xl mx-auto z-10 py-16">
+        <BlogSection
+          heading="Conference Insights"
+          description="Learn from past experiences and prepare for upcoming Balance Conference events."
+          desktopColumns={3}
+          tabletColumns={3}
+          mobileColumns={1}
+        />
       </section>
 
       {/* Footer */}

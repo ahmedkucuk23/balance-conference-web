@@ -35,7 +35,7 @@ export function PastSpeakers() {
               of a balanced life.
             </p>
           </div>
-          <Link href="#" className="group hidden items-center gap-2 text-sm font-medium md:inline-flex">
+          <Link href="/speakers" className="group hidden items-center gap-2 text-sm font-medium md:inline-flex">
             <span>See All Speakers</span>
             <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
@@ -87,7 +87,7 @@ export function PastSpeakers() {
         </div>
         <div className="mt-6 flex justify-center md:hidden">
           <Button asChild size="lg" className="rounded-full px-6">
-            <Link href="#">See All Speakers</Link>
+            <Link href="/speakers">See All Speakers</Link>
           </Button>
         </div>
       </div>

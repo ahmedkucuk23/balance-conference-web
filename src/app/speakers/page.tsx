@@ -4,6 +4,7 @@ import DarkVeil from '@/components/ui/dark-veil'
 import { HoverFooter } from '@/components/ui/hover-footer'
 import GradualBlur from '@/components/ui/gradual-blur'
 import { TeamSection, type TeamMember } from '@/components/ui/team'
+import { BlogSection } from '@/components/ui/blog-section'
 import { db } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
@@ -72,6 +73,17 @@ export default async function SpeakersPage() {
           variant="detailed"
           className="bg-transparent"
           description="Leading voices in wellbeing, leadership, and lifestyle innovation who have shaped our understanding of balance."
+        />
+      </section>
+
+      {/* Latest Insights Section */}
+      <section className="relative z-10 max-w-6xl mx-auto py-16">
+        <BlogSection
+          heading="Speaker Insights"
+          description="Discover wisdom and perspectives from our community of thought leaders and experts."
+          desktopColumns={3}
+          tabletColumns={3}
+          mobileColumns={1}
         />
       </section>
 

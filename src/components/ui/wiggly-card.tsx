@@ -1,23 +1,21 @@
 'use client';
 
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { useState, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-const ROTATION_RANGE = 5;
-const PERSPECTIVE = 400;
-
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 100,
-  damping: 30,
-};
+const ROTATION_RANGE = 4;
+const PERSPECTIVE = 900;
+const STIFFNESS = 80;
+const DAMPING = 20;
 
 interface WigglyCardProps {
   children: ReactNode;
   className?: string;
   rotationRange?: number;
   perspective?: number;
+  stiffness?: number;
+  damping?: number;
 }
 
 export const WigglyCard = ({
@@ -25,6 +23,8 @@ export const WigglyCard = ({
   className,
   rotationRange = ROTATION_RANGE,
   perspective = PERSPECTIVE,
+  stiffness = STIFFNESS,
+  damping = DAMPING,
 }: WigglyCardProps) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -57,6 +57,12 @@ export const WigglyCard = ({
   const handleLeave = () => {
     x.set(0);
     y.set(0);
+  };
+
+  const springTransition = {
+    type: 'spring' as const,
+    stiffness,
+    damping,
   };
 
   return (

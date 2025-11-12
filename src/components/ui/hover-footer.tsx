@@ -178,7 +178,7 @@ export const HoverFooter = () => {
     >
       <div className="absolute inset-0 bg-[#0A031B] z-0" />
       <FooterBackgroundGradient />
-      <div className="max-w-7xl mx-auto p-14 z-40 relative">
+      <div className="max-w-7xl mx-auto py-14 px-12 z-40 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12">
           {/* Brand section */}
           <div className="flex flex-col space-y-4">

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -48,17 +49,19 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 flex items-center justify-between relative z-10">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2 relative flex-shrink-0 min-w-0">
-              <div className={cn(
-                "text-sm sm:text-lg md:text-xl font-bold transition-colors duration-300 whitespace-nowrap truncate",
-                scrolledPastHero ? "text-gray-900" : "text-white"
-              )}>
-                <span className="hidden sm:inline">Balance Conference</span>
-                <span className="sm:hidden">Balance</span>
-                <span className={cn(
-                  "ml-1 sm:ml-2 text-xs sm:text-sm font-normal transition-colors duration-300",
-                  scrolledPastHero ? "text-purple-600" : "text-purple-400"
-                )}>2026</span>
+            <Link href="/" className="flex items-center space-x-0 relative flex-shrink-0">
+              <div className="relative h-8 sm:h-10 md:h-12 w-auto transition-all duration-300">
+                <Image
+                  src="/assets/img/logo-balance.png"
+                  alt="Balance Conference 2026"
+                  width={180}
+                  height={64}
+                  className={cn(
+                    "h-full w-auto object-contain transition-all duration-300",
+                    scrolledPastHero ? "brightness-0" : "brightness-100"
+                  )}
+                  priority
+                />
               </div>
             </Link>
 
@@ -118,6 +121,20 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
                           : "text-white hover:bg-white/10"
                       )}>
                         Speakers
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link href="/blog" className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent transition-colors duration-300",
+                        scrolledPastHero
+                          ? "text-gray-900 hover:bg-gray-100"
+                          : "text-white hover:bg-white/10"
+                      )}>
+                        Blog
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -231,6 +248,21 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
                     <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-accent-gold" />
                   )}
                   Speakers
+                </Link>
+                <Link
+                  href="/blog"
+                  className={cn(
+                    "text-2xl font-semibold transition-all duration-300 relative",
+                    pathname === "/blog" || pathname?.startsWith("/blog/")
+                      ? "text-white"
+                      : "text-white/60"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {(pathname === "/blog" || pathname?.startsWith("/blog/")) && (
+                    <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-accent-gold" />
+                  )}
+                  Blog
                 </Link>
                 <Link
                   href="/contact"
