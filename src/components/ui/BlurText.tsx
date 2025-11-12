@@ -143,7 +143,7 @@ const BlurText = ({
 
         if (animateBy === 'words') {
           const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
-          const spanTransition = {
+          const spanTransition: any = {
             duration: totalDuration,
             times,
             delay: (element.index * delay) / 1000
@@ -183,7 +183,7 @@ const BlurText = ({
                 {element.letters.map((letter, letterIdx) => {
                   const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
                   const globalLetterIndex = letterCount + letterIdx;
-                  const spanTransition = {
+                  const spanTransition: any = {
                     duration: totalDuration,
                     times,
                     delay: (globalLetterIndex * delay) / 1000
