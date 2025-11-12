@@ -210,7 +210,7 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
     let currentRot = 0;
     const rotationSpeed = 0.3;
 
-    const handleMouseMove = e => {
+    const handleMouseMove = (e: any) => {
       const rect = container.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -236,8 +236,8 @@ export default function Orb({ hue = 0, hoverIntensity = 0.2, rotateOnHover = tru
     container.addEventListener('mousemove', handleMouseMove);
     container.addEventListener('mouseleave', handleMouseLeave);
 
-    let rafId;
-    const update = t => {
+    let rafId: any;
+    const update = (t: any) => {
       rafId = requestAnimationFrame(update);
       const dt = (t - lastTime) * 0.001;
       lastTime = t;
