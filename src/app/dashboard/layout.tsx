@@ -18,11 +18,11 @@ export default function DashboardLayout({
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check authentication
-    fetch('/api/auth/session')
+    // Check authorization (authentication + whitelist)
+    fetch('/api/auth/check-authorization')
       .then(res => res.json())
       .then(data => {
-        if (data?.user) {
+        if (data?.authorized) {
           setIsAuthenticated(true)
         } else {
           redirect('/login')
