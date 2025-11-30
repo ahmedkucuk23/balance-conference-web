@@ -204,10 +204,9 @@ export function BlogSection({
 			</div>
 			<div className={gridClasses}>
 				{displayedBlogs.map((blog) => (
-					<a
-						href={blog.slug}
+					<div
 						key={blog.title}
-						className="group flex flex-col gap-3 rounded-xl overflow-hidden bg-[#0A031B]/40 backdrop-blur-xl border border-balance-200/10 hover:border-balance-300/30 transition-all duration-300 hover:transform hover:scale-[1.02]"
+						className="flex flex-col gap-3 rounded-xl overflow-hidden bg-[#0A031B]/40 backdrop-blur-xl border border-balance-200/10"
 					>
 						<LazyImage
 							src={blog.image}
@@ -226,14 +225,14 @@ export function BlogSection({
 								<div className="bg-balance-300 size-1 rounded-full" />
 								<p>{blog.readTime}</p>
 							</div>
-							<h2 className="line-clamp-2 text-xl leading-tight font-semibold tracking-tight text-white group-hover:text-accent-gold transition-colors">
+							<h2 className="line-clamp-2 text-xl leading-tight font-semibold tracking-tight text-white">
 								{blog.title}
 							</h2>
 							<p className="text-balance-100 line-clamp-3 text-sm leading-relaxed">
 								{blog.description}
 							</p>
 						</div>
-					</a>
+					</div>
 				))}
 			</div>
 		</div>

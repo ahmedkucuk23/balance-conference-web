@@ -14,14 +14,16 @@ const BlogSection = dynamic(() => import("@/components/ui/blog-section").then(mo
 const HoverFooter = dynamic(() => import("@/components/ui/hover-footer").then(mod => ({ default: mod.HoverFooter })));
 
 const CONFERENCE_IMAGES = [
-  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&auto=format&fit=crop&q=60",
-  "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=900&auto=format&fit=crop&q=60",
-  "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=900&auto=format&fit=crop&q=60",
-  "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=900&auto=format&fit=crop&q=60",
-  "https://images.unsplash.com/photo-1511578314322-379afb476865?w=900&auto=format&fit=crop&q=60",
-  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=900&auto=format&fit=crop&q=60",
-  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=900&auto=format&fit=crop&q=60",
-  "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&auto=format&fit=crop&q=60",
+  "/assets/img/1.jpg.webp",
+  "/assets/img/2.jpg",
+  "/assets/img/3.jpg",
+  "/assets/img/4.jpg.webp",
+  "/assets/img/5.jpg",
+  "/assets/img/6.jpg.webp",
+  "/assets/img/7.jpg.webp",
+  "/assets/img/8.jpg.webp",
+  "/assets/img/9.jpg.webp",
+  "/assets/img/10.jpeg.webp",
 ];
 
 export default function Home() {
@@ -32,10 +34,12 @@ export default function Home() {
         target="page"
         position="bottom"
         height="10rem"
-        strength={.5}
+        strength={.3}
         divCount={4}
         opacity={1}
         zIndex={1000}
+        responsive={true}
+        mobileHeight="0rem"
       />
       
       <TopNavigation scrollThreshold={880} />

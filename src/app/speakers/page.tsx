@@ -4,6 +4,7 @@ import { TopNavigation } from '@/components/blocks/top-navigation'
 import DarkVeil from '@/components/ui/dark-veil'
 import GradualBlur from '@/components/ui/gradual-blur'
 import { TeamSection, type TeamMember } from '@/components/ui/team'
+import { SpeakersCTA } from '@/components/blocks/speakers-cta'
 import { db } from '@/lib/db'
 
 // Lazy load below-the-fold components
@@ -35,10 +36,12 @@ export default async function SpeakersPage() {
         target="page"
         position="bottom"
         height="12rem"
-        strength={.5}
+        strength={.3}
         divCount={4}
         opacity={1}
         zIndex={1000}
+        responsive={true}
+        mobileHeight="0rem"
       />
       
       <TopNavigation scrollThreshold={9999999999} />
@@ -78,6 +81,9 @@ export default async function SpeakersPage() {
           description="Leading voices in wellbeing, leadership, and lifestyle innovation who have shaped our understanding of balance."
         />
       </section>
+
+      {/* Speakers CTA Banner */}
+      <SpeakersCTA />
 
       {/* Latest Insights Section */}
       <section className="relative z-10 max-w-6xl mx-auto py-16">

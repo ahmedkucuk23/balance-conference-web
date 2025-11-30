@@ -1,11 +1,13 @@
 import React from 'react'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { TopNavigation } from '@/components/blocks/top-navigation'
 import BlurText from '@/components/ui/BlurText'
 import DarkVeil from '@/components/ui/dark-veil'
 import { HoverFooter } from '@/components/ui/hover-footer'
 import GradualBlur from '@/components/ui/gradual-blur'
-import { Mail, Linkedin, Instagram } from 'lucide-react'
+import { SpeakersCTA } from '@/components/blocks/speakers-cta'
+import { Mail, Linkedin, Instagram, ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
 import { db } from '@/lib/db'
 
@@ -133,9 +135,18 @@ export default async function SpeakerPage({
 
             {/* Right: Speaker Info (70%) */}
             <div className="lg:col-span-7 flex flex-col justify-end space-y-3">
-              <h6 className="text-sm font-medium uppercase tracking-wider text-balance-200">
-                Sarajevo Conference 2025 Speaker
-              </h6>
+              <div className="flex justify-between items-start mb-2">
+                <h6 className="text-sm font-medium uppercase tracking-wider text-balance-200">
+                  Sarajevo Conference 2025 Speaker
+                </h6>
+                <Link
+                  href="/speakers"
+                  className="flex items-center gap-1 text-balance-200 hover:text-white transition-colors text-sm font-medium group"
+                >
+                  <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                  All Speakers
+                </Link>
+              </div>
               <h1 className="text-5xl md:text-6xl font-bold text-white">
                 {record.name}
               </h1>
@@ -250,6 +261,9 @@ export default async function SpeakerPage({
           </div>
         </div>
       </section>
+
+      {/* Speakers CTA Banner */}
+      <SpeakersCTA />
 
       {/* Footer */}
       <HoverFooter />

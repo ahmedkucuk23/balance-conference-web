@@ -66,10 +66,12 @@ export default function ContactPage() {
         target="page"
         position="bottom"
         height="12rem"
-        strength={0.5}
+        strength={0.3}
         divCount={4}
         opacity={1}
         zIndex={1000}
+        responsive={true}
+        mobileHeight="0rem"
       />
 
       <TopNavigation scrollThreshold={9999999999} />

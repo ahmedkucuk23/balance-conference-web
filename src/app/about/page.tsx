@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Mail } from 'lucide-react'
 import Image from 'next/image'
 import { db } from '@/lib/db'
+import { Eyebrow } from '@/components/ui/eyebrow'
 
 // Lazy load heavy animation and WebGL components
 const DarkVeil = dynamicImport(() => import('@/components/ui/dark-veil'))
@@ -43,7 +44,8 @@ async function getSpeakerTestimonials(): Promise<Testimonial[]> {
     quote: s.quote || '',
     name: s.name,
     designation: s.shortDescription || s.location || 'Speaker',
-    src: s.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1066&fit=crop'
+    src: s.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1066&fit=crop',
+    slug: s.slug
   }))
 
   // Return fallback testimonials if no speakers found
@@ -132,10 +134,12 @@ export default async function AboutPage() {
         target="page"
         position="bottom"
         height="8rem"
-        strength={.5}
+        strength={.3}
         divCount={4}
         opacity={1}
         zIndex={1000}
+        responsive={true}
+        mobileHeight="0rem"
       />
       
       <TopNavigation scrollThreshold={9999999999} />
@@ -327,9 +331,7 @@ export default async function AboutPage() {
 
       <section className="relative z-10 py-16">
       <AnimatedSection className="flex flex-col items-start justify-center max-w-6xl mx-auto mb-10 px-12 lg:px-16 xl:px-0">
-            <div className="flex justify-center">
-              <div className="border border-balance-200/30 py-1 px-4 rounded-lg text-balance-100 text-sm">Testimonials</div>
-            </div>
+            <Eyebrow>Testimonials</Eyebrow>
             <h2 className="text-5xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5 text-white text-left">
               What our Speakers say
             </h2>
@@ -362,9 +364,7 @@ export default async function AboutPage() {
  <section className="relative z-10 py-16" style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }}>
         <div className="container z-10 mx-auto max-w-7xl px-12 lg:px-16">
           <AnimatedSection className="flex flex-col items-start justify-center mx-auto mb-10">
-            <div className="flex justify-center">
-              <div className="border border-balance-200/30 py-1 px-4 rounded-lg text-balance-100 text-sm">Testimonials</div>
-            </div>
+            <Eyebrow>Testimonials</Eyebrow>
             <h2 className="text-5xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5 text-white text-left">
               What our attendees say
             </h2>
@@ -374,9 +374,9 @@ export default async function AboutPage() {
           </AnimatedSection>
 
           <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[720px] overflow-hidden">
-            <TestimonialsColumn testimonials={firstColumn} duration={15} />
-            <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
-            <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+            <TestimonialsColumn testimonials={firstColumn} duration={30} />
+            <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={38} />
+            <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={34} />
           </div>
         </div>
       </section>

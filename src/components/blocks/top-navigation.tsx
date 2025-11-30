@@ -57,12 +57,12 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 flex items-center justify-between relative z-10">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-0 relative flex-shrink-0">
-              <div className="relative h-8 sm:h-10 md:h-12 w-auto transition-all duration-300">
+              <div className="relative h-20 sm:h-20 md:h-20 w-auto transition-all duration-300">
                 <Image
                   src="/assets/img/logo-balance.png"
                   alt="Balance Conference 2026"
-                  width={180}
-                  height={64}
+                  width={300}
+                  height={96}
                   className={cn(
                     "h-full w-auto object-contain transition-all duration-300",
                     scrolledPastHero ? "brightness-0" : "brightness-100"
@@ -147,13 +147,6 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
-
-              <Button
-                asChild
-                className="bg-balance-300 hover:bg-balance-400 text-white rounded-lg px-6"
-              >
-                <Link href="/tickets">Get Tickets</Link>
-              </Button>
             </div>
 
             {/* Mobile Menu Button */}

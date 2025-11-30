@@ -12,6 +12,7 @@ import { ByTheNumbers } from '@/components/blocks/by-the-numbers'
 import { BlogSection } from '@/components/ui/blog-section'
 import { motion } from 'motion/react'
 import type { Testimonial } from '@/components/ui/testimonials'
+import { Eyebrow } from '@/components/ui/eyebrow'
 
 // Attendee testimonials for the columns section
 const attendeeTestimonials: TestimonialColumnType[] = [
@@ -91,6 +92,7 @@ export default function ConferencesPage() {
               designation: speaker.shortDescription || speaker.location || 'Speaker',
               quote: speaker.quote || '',
               src: speaker.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1066&fit=crop',
+              slug: speaker.slug,
             }))
           setSpeakers(speakerTestimonials)
         }
@@ -105,10 +107,12 @@ export default function ConferencesPage() {
         target="page"
         position="bottom"
         height="12rem"
-        strength={.5}
+        strength={.3}
         divCount={4}
         opacity={1}
         zIndex={1000}
+        responsive={true}
+        mobileHeight="0rem"
       />
       
       <TopNavigation scrollThreshold={9999999999} />
@@ -237,9 +241,7 @@ export default function ConferencesPage() {
           viewport={{ once: true }}
           className="flex flex-col items-start justify-center max-w-6xl mx-auto mb-10 px-12 lg:px-16 xl:px-0"
         >
-          <div className="flex justify-center">
-            <div className="border border-balance-200/30 py-1 px-4 rounded-lg text-balance-100 text-sm">Testimonials</div>
-          </div>
+          <Eyebrow>Testimonials</Eyebrow>
           <h2 className="text-5xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5 text-white text-left">
             What our Speakers say
           </h2>
@@ -287,9 +289,7 @@ export default function ConferencesPage() {
             viewport={{ once: true }}
             className="flex flex-col items-start justify-center mx-auto mb-10"
           >
-            <div className="flex justify-center">
-              <div className="border border-balance-200/30 py-1 px-4 rounded-lg text-balance-100 text-sm">Testimonials</div>
-            </div>
+            <Eyebrow>Testimonials</Eyebrow>
             <h2 className="text-5xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5 text-white text-left">
               What our attendees say
             </h2>
@@ -299,9 +299,9 @@ export default function ConferencesPage() {
           </motion.div>
 
           <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[720px] overflow-hidden">
-            <TestimonialsColumn testimonials={firstColumn} duration={15} />
-            <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
-            <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+            <TestimonialsColumn testimonials={firstColumn} duration={30} />
+            <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={38} />
+            <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={34} />
           </div>
         </div>
       </section>

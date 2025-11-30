@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 const LaurelWreath = () => (
   <svg
     className={cn(
-      "fill-accent-gold/10 absolute"
+      "fill-accent-gold/10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
     )}
     width="960"
     height="640"
