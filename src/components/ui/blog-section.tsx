@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { LazyImage } from './lazy-image';
 import { cn } from '@/lib/utils';
@@ -36,29 +36,6 @@ interface BlogSectionProps {
 	showBackground?: boolean;
 }
 
-const defaultBlogs: BlogPost[] = [
-	{
-		title: 'Finding Balance in a Fast-Paced World',
-		slug: 'finding-balance-in-a-fast-paced-world',
-		description:
-			'Learn how to maintain mental and physical wellbeing while navigating the demands of modern life. Discover practical strategies for sustainable success.',
-		image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=600&fit=crop',
-		createdAt: '2025-08-25',
-		author: 'Ava Mitchell',
-		readTime: '7 min read',
-	},
-	{
-		title: 'The Psychology of Mindfulness',
-		slug: 'the-psychology-of-mindfulness',
-		description:
-			'Explore how mindfulness practices influence mental health, emotional regulation, and overall wellbeing in our daily lives.',
-		image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=600&fit=crop',
-		createdAt: '2025-07-14',
-		author: 'Liam Carter',
-		readTime: '5 min read',
-	},
-];
-
 const getGridColsClass = (cols?: number) => {
 	switch (cols) {
 		case 1:
@@ -75,7 +52,7 @@ const getGridColsClass = (cols?: number) => {
 };
 
 export function BlogSection({
-	blogs = defaultBlogs,
+	blogs: propBlogs,
 	maxPosts = 3,
 	mobileColumns = 1,
 	tabletColumns = 2,
@@ -85,6 +62,40 @@ export function BlogSection({
 	containerClassName,
 	showBackground = true,
 }: BlogSectionProps) {
+	const [blogs, setBlogs] = useState<BlogPost[]>(propBlogs || []);
+	const [isLoading, setIsLoading] = useState(!propBlogs);
+
+	// Fetch blog posts from API if not provided
+	useEffect(() => {
+		if (!propBlogs) {
+			fetch('/api/blog-posts')
+				.then(res => res.json())
+				.then(data => {
+					const formattedBlogs = (data.blogPosts || [])
+						.filter((post: any) => post.published)
+						.map((post: any) => ({
+							title: post.title,
+							slug: post.slug,
+							description: post.description,
+							image: post.image,
+							author: post.author,
+							readTime: post.readTime,
+							createdAt: new Date(post.createdAt).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric',
+							}),
+						}));
+					setBlogs(formattedBlogs);
+				})
+				.catch(err => {
+					console.error('Error fetching blog posts:', err);
+					setBlogs([]);
+				})
+				.finally(() => setIsLoading(false));
+		}
+	}, [propBlogs]);
+
 	// Limit the number of blogs displayed
 	const displayedBlogs = blogs.slice(0, maxPosts);
 
