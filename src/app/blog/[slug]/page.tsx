@@ -1,5 +1,5 @@
 import React from 'react'
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { TopNavigation } from '@/components/blocks/top-navigation'
 import DarkVeil from '@/components/ui/dark-veil'
@@ -7,12 +7,13 @@ import { HoverFooter } from '@/components/ui/hover-footer'
 import GradualBlur from '@/components/ui/gradual-blur'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
+import { db } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-// Placeholder blog posts data
-const blogPosts = [
+// Legacy blog posts data (used as fallback if database is empty)
+const legacyBlogPosts = [
   {
     slug: 'finding-balance-in-a-fast-paced-world',
     title: 'Finding Balance in a Fast-Paced World',
@@ -74,12 +75,29 @@ export default async function BlogPostPage({
     redirect('/blog')
   }
 
-  // Find the blog post
-  const post = blogPosts.find(p => p.slug === slug)
+  // Try to fetch from database first
+  let post = await (db as any).blogPost.findUnique({
+    where: { slug, published: true },
+  })
 
+  // If not found in database, try legacy posts
   if (!post) {
-    redirect('/blog')
+    const legacyPost = legacyBlogPosts.find(p => p.slug === slug)
+    if (legacyPost) {
+      post = legacyPost
+    } else {
+      notFound()
+    }
   }
+
+  // Format date for display
+  const formattedDate = post.createdAt instanceof Date
+    ? post.createdAt.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : post.createdAt
 
   return (
     <>
@@ -139,7 +157,7 @@ export default async function BlogPostPage({
           <div className="flex items-center gap-3 text-balance-200 text-sm mb-6">
             <span>by {post.author}</span>
             <div className="w-1 h-1 rounded-full bg-balance-300" />
-            <span>{post.createdAt}</span>
+            <span>{formattedDate}</span>
             <div className="w-1 h-1 rounded-full bg-balance-300" />
             <span>{post.readTime}</span>
           </div>

@@ -1,12 +1,41 @@
-'use client';
-
 import { BlogSection, type BlogPost } from '@/components/ui/blog-section';
 import { TopNavigation } from '@/components/blocks/top-navigation';
 import { HoverFooter } from '@/components/ui/hover-footer';
 import DarkVeil from '@/components/ui/dark-veil';
 import GradualBlur from '@/components/ui/gradual-blur';
+import { db } from '@/lib/db';
 
-export default function BlogPage() {
+export default async function BlogPage() {
+	// Fetch published blog posts from database
+	const blogPosts = await (db as any).blogPost.findMany({
+		where: { published: true },
+		orderBy: { createdAt: 'desc' },
+		select: {
+			id: true,
+			slug: true,
+			title: true,
+			description: true,
+			image: true,
+			author: true,
+			readTime: true,
+			createdAt: true,
+		},
+	});
+
+	// Format blog posts for the BlogSection component
+	const formattedBlogs: BlogPost[] = blogPosts.map((post: any) => ({
+		title: post.title,
+		slug: post.slug,
+		description: post.description,
+		image: post.image,
+		author: post.author,
+		readTime: post.readTime,
+		createdAt: new Date(post.createdAt).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		}),
+	}));
 	return (
 		<>
 			{/* GradualBlur effect */}
@@ -67,6 +96,7 @@ export default function BlogPage() {
 				}}
 			>
 				<BlogSection
+					blogs={formattedBlogs}
 					heading="Featured Articles"
 					description="Explore our most impactful insights on balance, wellness, and personal growth."
 					desktopColumns={3}
