@@ -34,14 +34,14 @@ async function getSpeakerTestimonials(): Promise<Testimonial[]> {
   const speakers = await (db as any).speaker.findMany({
     where: {
       published: true,
-      quote: { not: null }
+      motto: { not: null }
     },
     orderBy: { createdAt: 'desc' },
     take: 10
   })
 
   const testimonials = (speakers as any[]).map((s: any) => ({
-    quote: s.quote || '',
+    quote: s.motto || '',
     name: s.name,
     designation: s.shortDescription || s.location || 'Speaker',
     src: s.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1066&fit=crop',

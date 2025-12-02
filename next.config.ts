@@ -33,8 +33,22 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.avaz.ba',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'blog.episcopalretirement.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
+
+
 
 export default nextConfig;

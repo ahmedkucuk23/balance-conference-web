@@ -135,18 +135,18 @@ export default async function SpeakerPage({
 
             {/* Right: Speaker Info (70%) */}
             <div className="lg:col-span-7 flex flex-col justify-end space-y-3">
-              <div className="flex justify-between items-start mb-2">
-                <h6 className="text-sm font-medium uppercase tracking-wider text-balance-200">
-                  Sarajevo Conference 2025 Speaker
-                </h6>
-                <Link
-                  href="/speakers"
-                  className="flex items-center gap-1 text-balance-200 hover:text-white transition-colors text-sm font-medium group"
-                >
-                  <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                  All Speakers
-                </Link>
-              </div>
+              {/* Back button - above the text on all screen sizes */}
+              <Link
+                href="/speakers"
+                className="flex items-center gap-1 text-balance-200 hover:text-white transition-colors text-sm font-medium group mb-2"
+              >
+                <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                All Speakers
+              </Link>
+
+              <h6 className="text-sm font-medium uppercase tracking-wider text-balance-200 mb-2">
+                Sarajevo Conference 2025 Speaker
+              </h6>
               <h1 className="text-5xl md:text-6xl font-bold text-white">
                 {record.name}
               </h1>
@@ -202,20 +202,22 @@ export default async function SpeakerPage({
         style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }}
       >
         <div className="mx-auto max-w-6xl px-8 md:px-12 w-full py-8 md:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 lg:gap-12 items-start">
             {/* Left: Quote (30%) */}
-            <div className="lg:col-span-3 flex items-start">
+            <div className="lg:col-span-3">
               {record.quote ? (
-                <BlurText
-                  segments={[{ text: record.quote }]}
-                  delay={40}
-                  animateBy="words"
-                  direction="top"
-                  animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
-                  animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
-                  onAnimationComplete={undefined}
-                  className="text-4xl md:text-5xl italic font-serif-display text-white leading-tight"
-                />
+                <div className="sticky top-32">
+                  <BlurText
+                    segments={[{ text: record.quote }]}
+                    delay={40}
+                    animateBy="words"
+                    direction="top"
+                    animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
+                    animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
+                    onAnimationComplete={undefined}
+                    className="text-4xl md:text-5xl italic font-serif-display text-white leading-tight"
+                  />
+                </div>
               ) : (
                 <div className="w-full" />
               )}

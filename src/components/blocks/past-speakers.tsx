@@ -124,28 +124,6 @@ export function PastSpeakers() {
                   direction="right"
                   blurIntensity={1}
                 />
-
-                {/* Desktop Navigation Buttons - Absolute to slider */}
-                <div className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20">
-                  <Button
-                    onClick={handlePrev}
-                    size="icon"
-                    variant="secondary"
-                    className="h-12 w-12 rounded-full bg-white/90 hover:bg-white shadow-lg"
-                  >
-                    <ChevronLeft className="h-6 w-6" />
-                  </Button>
-                </div>
-                <div className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20">
-                  <Button
-                    onClick={handleNext}
-                    size="icon"
-                    variant="secondary"
-                    className="h-12 w-12 rounded-full bg-white/90 hover:bg-white shadow-lg"
-                  >
-                    <ChevronRight className="h-6 w-6" />
-                  </Button>
-                </div>
               </div>
             </div>
 

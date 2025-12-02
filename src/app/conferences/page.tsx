@@ -86,11 +86,11 @@ export default function ConferencesPage() {
       .then(data => {
         if (data.speakers) {
           const speakerTestimonials: Testimonial[] = data.speakers
-            .filter((speaker: any) => speaker.published && speaker.quote)
+            .filter((speaker: any) => speaker.published && speaker.motto)
             .map((speaker: any) => ({
               name: speaker.name,
               designation: speaker.shortDescription || speaker.location || 'Speaker',
-              quote: speaker.quote || '',
+              quote: speaker.motto || '',
               src: speaker.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=1066&fit=crop',
               slug: speaker.slug,
             }))
