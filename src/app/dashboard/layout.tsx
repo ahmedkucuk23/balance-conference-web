@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
-import { Users, Calendar, LogOut, Mail } from "lucide-react"
+import { Users, Calendar, LogOut, Mail, FileText } from "lucide-react"
 
 export default function DashboardLayout({
   children,
@@ -54,6 +54,11 @@ export default function DashboardLayout({
       title: "Conferences",
       href: "/dashboard/conferences",
       icon: Calendar,
+    },
+    {
+      title: "Blog Posts",
+      href: "/dashboard/blog-posts",
+      icon: FileText,
     },
     {
       title: "Form Submissions",
