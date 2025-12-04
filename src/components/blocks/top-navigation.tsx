@@ -47,9 +47,9 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
       <header className="fixed top-0 left-0 right-0 z-[10000] w-full" style={{ position: 'fixed', top: 0, left: 0, right: 0 }}>
         <nav
           className={cn(
-            "w-full py-3 sm:py-4 transition-all duration-300 relative",
-            scrolledPastHero 
-              ? "backdrop-blur-lg bg-white/90" 
+            "w-full py-1 sm:py-1.5 transition-all duration-300 relative",
+            scrolledPastHero
+              ? "backdrop-blur-lg bg-white/90"
               : "backdrop-blur-lg bg-balance-500/10"
           )}
           style={{ minHeight: '56px' }}

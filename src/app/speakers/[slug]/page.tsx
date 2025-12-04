@@ -96,6 +96,8 @@ export default async function SpeakerPage({
         divCount={4}
         opacity={1}
         zIndex={1000}
+        responsive={true}
+        mobileHeight="0rem"
       />
       
       <TopNavigation scrollThreshold={9999999999} />
