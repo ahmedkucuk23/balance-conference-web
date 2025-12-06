@@ -35,7 +35,7 @@ export default function SarajevoConference({
   ],
   howTitle = 'The result?',
   howDescription = 'A sold-out event, record engagement, powerful partnerships, and media buzz across the region. Attendees called it unlike anything BiH had ever seen, a space where inspiration, movement, mindfulness, and connection came to life.',
-  ctaHref = '#',
+  ctaHref = '/conferences/sarajevo2025',
   ctaLabel = 'See the Full Story in Numbers',
   nextChapterText = 'The next chapter of Balance is just around the corner.',
 }: SarajevoConferenceProps) {

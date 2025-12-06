@@ -13,6 +13,11 @@ import { BlogSection } from '@/components/ui/blog-section'
 import { motion } from 'motion/react'
 import type { Testimonial } from '@/components/ui/testimonials'
 import { Eyebrow } from '@/components/ui/eyebrow'
+import { BannerProvider } from '@/components/blocks/announcement-banner'
+import { Button } from '@/components/ui/button'
+import { Mail, ArrowUpRight } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 
 // Attendee testimonials for the columns section
 const attendeeTestimonials: TestimonialColumnType[] = [
@@ -101,7 +106,7 @@ export default function ConferencesPage() {
       .finally(() => setLoadingSpeakers(false))
   }, [])
   return (
-    <>
+    <BannerProvider>
       {/* GradualBlur effect for entire page */}
       <GradualBlur
         target="page"
@@ -114,9 +119,9 @@ export default function ConferencesPage() {
         responsive={true}
         mobileHeight="0rem"
       />
-      
-      <TopNavigation scrollThreshold={9999999999} />
-      
+
+      <TopNavigation scrollThreshold={9999999999} hasBanner={true} />
+
       {/* DarkVeil background effect for entire page */}
       <div className="fixed inset-0 z-[1] pointer-events-none" style={{ width: '100vw', height: '100vh' }}>
         <DarkVeil
@@ -131,13 +136,13 @@ export default function ConferencesPage() {
       </div>
 
       {/* Hero Section */}
-      <section style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }} className="w-full h-[50vh] relative overflow-hidden z-10">
+      <section style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }} className="w-full h-[50vh] relative overflow-hidden z-10 pt-[161px] md:pt-[103px]">
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-6">
           <h1 className="text-5xl md:text-6xl font-bold text-white text-center mb-4">
-            Sarajevo Conference 2025
+            Conferences
           </h1>
-          <p className="text-2xl text-balance-200 text-center">
-            May 22, 2025
+          <p className="text-2xl text-balance-200 text-center max-w-3xl">
+            Join a community redefining what it means to live well, inside and out. Reconnect with yourself, others, and what truly matters.
           </p>
         </div>
       </section>
@@ -145,88 +150,173 @@ export default function ConferencesPage() {
       {/* Content Section */}
       <section className="w-full relative z-10">
         <div className="mx-auto" style={{ maxWidth: '1120px' }}>
-          {/* First paragraph - full width */}
-          <div className="flex items-center py-64 px-6">
+          <div className="flex items-center justify-center py-64 px-6">
             <BlurText
               segments={[
-                { text: 'Around' },
-                { text: '1.75 million', color: '#ffffff' },
-                { text: 'people in BiH show symptoms of post-traumatic stress disorder.' },
-                { text: '400,000', color: '#ffffff' },
-                { text: 'suffer from full PTSD. Mental health issues are rising and not just in frequency, but also in severity.' }
+                { text: 'A yearly gathering focused on depth, honest conversations and ideas worth practicing.' }
               ]}
               delay={80}
               animateBy="words"
               direction="top"
               animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
               animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
-              className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto"
+              className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto text-center"
             />
           </div>
-        </div>
 
-        {/* First paragraph section - left aligned */}
-        <div className="mx-auto" style={{ maxWidth: '1120px' }}>
-          <div className="min-h-screen flex items-center px-6">
-            <div className="w-full max-w-2xl">
-              <BlurText
-                segments={[
-                  { text: 'Fast-paced lifestyles, constant change, unstable work environments, and social media pressure are taking their toll. Balance, the kind that harmonizes physical, emotional, mental, and spiritual needs, has become essential. Without it,' },
-                  { text: 'people feel exhausted, directionless, and insecure.', color: '#ffffff' }
-                ]}
-                delay={80}
-                animateBy="words"
-                direction="top"
-                animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
-                animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
-                className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto"
-              />
+          {/* Conference Banners */}
+          <div className="w-full flex flex-col md:flex-row h-[60vh] md:h-[40vh] group/container px-6 gap-5">
+          {/* Balance 2026 Banner */}
+          <Link
+            href="/conferences/balance2026"
+            className="relative flex-1 overflow-hidden transition-all duration-700 ease-in-out group/banner md:hover:flex-[1.4] flex items-center justify-center rounded-2xl"
+            style={{
+              backgroundImage: 'url(/assets/img/5e0f9bffbd38062c95cf5a66c5683acececf2c58.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 group-hover/banner:from-black/60" />
+            <ArrowUpRight className="absolute top-6 right-6 w-8 h-8 text-white opacity-80" />
+            <div className="relative z-10 text-center px-6">
+              <motion.h3
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-3"
+              >
+                Balance Conference 2026
+              </motion.h3>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-sm md:text-base text-balance-100 max-w-md mx-auto"
+              >
+                Ready to renew your energy, find clarity, and build habits that last? Join us on March 26th and take part in an experience made for lasting change!
+              </motion.p>
             </div>
+          </Link>
+
+          {/* Sarajevo 2025 Banner */}
+          <Link
+            href="/conferences/sarajevo2025"
+            className="relative flex-1 overflow-hidden transition-all duration-700 ease-in-out group/banner md:hover:flex-[1.4] flex items-center justify-center rounded-2xl"
+            style={{
+              backgroundImage: 'url(/assets/img/895e62d470d46265b740217dcb5ba8eaa9f2bbe7.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 group-hover/banner:from-black/60" />
+            <ArrowUpRight className="absolute top-6 right-6 w-8 h-8 text-white opacity-80" />
+            <div className="relative z-10 text-center px-6">
+              <motion.h3
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-3"
+              >
+                Sarajevo Balance Conference 2025
+              </motion.h3>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-sm md:text-base text-balance-100 max-w-md mx-auto"
+              >
+                See the recap of our previous edition
+              </motion.p>
+            </div>
+          </Link>
           </div>
         </div>
+      </section>
 
-        {/* Second paragraph section - right aligned */}
+      {/* Why It Matters Section */}
+      <section className="w-full relative z-10">
         <div className="mx-auto" style={{ maxWidth: '1120px' }}>
-          <div className="min-h-screen flex items-center px-6">
-            <div className="w-full max-w-2xl ml-auto">
-              <BlurText
-                segments={[
-                  { text: "Yet despite its importance, balance still doesn't get the attention it deserves." },
-                  { text: "There's no public dialogue. No space dedicated to it.", color: '#ffffff', lineBreak: true }
-                ]}
-                delay={80}
-                animateBy="words"
-                direction="top"
-                animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -50 } as any}
-                animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
-                className="text-3xl font-semibold text-balance-100 md:text-3xl leading-[1.25] break-words hyphens-auto text-left lg:text-right"
-              />
-            </div>
-          </div>
-        </div>
+          <div className="min-h-screen flex items-center py-64 px-6">
+            <div className="w-full mx-auto max-w-xl lg:max-w-2xl mx-0 xl:max-w-6xl">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center">
+                {/* Left Side - Content */}
+                <div className="space-y-8">
+                  <h2 className="text-5xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white">
+                    Why It Matters?
+                  </h2>
 
-        {/* Highlighted text */}
-        <div className="mx-auto" style={{ maxWidth: '1120px' }}>
-          <div className="min-h-screen flex items-center px-6">
-            <div className="w-full flex flex-wrap justify-center items-center gap-2">
-              <BlurText
-                segments={[
-                  {
-                    text: "That's why we created the first BiH conference dedicated to ",
-                    color: undefined // Uses text-accent-second from className
-                  },
-                  {
-                    text: "living in balance.",
-                    color: 'white' // Overrides className color
-                  }
-                ]}
-                delay={40}
-                animateBy="letters"
-                direction="top"
-                animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -20 } as any}
-                animationTo={[{ filter: 'blur(5px)', opacity: 0.5, y: 5 }, { filter: 'blur(0px)', opacity: 1, y: 0 }] as any}
-                className="text-6xl md:text-6xl tracking-tight font-thin italic text-accent-second text-center font-serif-display"
-              />
+                  <div className="space-y-6 text-balance-100 text-lg leading-relaxed">
+                    <p>
+                      Traditional systems don't always give us space to talk about mental health, stress, or personal growth. Hospitals treat symptoms. Workplaces demand performance. But who's teaching us how to actually manage the pressure?
+                    </p>
+                    <p>
+                      That's where we come in. We gather experts, share proven methods, and create a space where transformation happens, not through quick fixes, but through <span className="text-white font-semibold">real, lasting change.</span>
+                    </p>
+                  </div>
+
+                  <Button
+                    size="lg"
+                    className="bg-balance-300 hover:bg-balance-400 text-white rounded-xl w-full sm:w-auto"
+                    asChild
+                  >
+                    <a href="/contact">
+                      <Mail className="w-5 h-5 mr-2" />
+                      <span className="hidden sm:inline">Join as an Expert! Drop Us an Email</span>
+                      <span className="sm:hidden">Join as Expert</span>
+                    </a>
+                  </Button>
+                </div>
+
+                {/* Right Side - Image Grid */}
+                <div className="grid grid-cols-2 gap-4 mt-12 xl:mt-0">
+                  {/* Top Left Image */}
+                  <div className="col-span-1">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                      <Image
+                        src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop"
+                        alt="Community gathering"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                  {/* Top Right Image */}
+                  <div className="col-span-1">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                      <Image
+                        src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop"
+                        alt="Conference networking"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Bottom Left Image */}
+                  <div className="col-span-1">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                      <Image
+                        src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=600&fit=crop"
+                        alt="Conference bags"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Bottom Right Image */}
+                  <div className="col-span-1">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                      <Image
+                        src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=600&fit=crop"
+                        alt="Conference attendees"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -276,9 +366,6 @@ export default function ConferencesPage() {
         </div>
       </section>
 
-      {/* By The Numbers Section */}
-      <ByTheNumbers />
-
       {/* Attendees Testimonials Columns Section */}
       <section className="relative z-10 py-16" style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }}>
         <div className="container z-10 mx-auto max-w-7xl px-6 lg:px-16">
@@ -319,6 +406,6 @@ export default function ConferencesPage() {
 
       {/* Footer */}
       <HoverFooter />
-    </>
+    </BannerProvider>
   )
 }

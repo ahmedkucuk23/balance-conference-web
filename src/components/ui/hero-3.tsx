@@ -93,10 +93,16 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
           transition={{ delay: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 mt-8"
         >
           <Link href={ctaLink || "#"}>
-            <Button size="lg" className="bg-balance-300 hover:bg-balance-400 text-white mt-8 rounded-lg">
+            <Button size="lg" className="bg-white hover:bg-white/90 text-balance-300 border border-balance-300 rounded-lg">
               {ctaText}
+            </Button>
+          </Link>
+          <Link href="/conferences/balance2026">
+            <Button size="lg" className="bg-balance-300 hover:bg-balance-400 text-white rounded-lg">
+              See What is Coming Next
             </Button>
           </Link>
         </motion.div>

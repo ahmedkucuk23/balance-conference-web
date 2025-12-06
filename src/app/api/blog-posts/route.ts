@@ -2,14 +2,34 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { checkAuthorization } from "@/lib/auth-helpers"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Fetch all blog posts (including unpublished for dashboard)
+    const { searchParams } = new URL(request.url)
+    const publishedOnly = searchParams.get('published') !== 'false'
+
+    // Fetch blog posts with optimized query
     const blogPosts = await (db as any).blogPost.findMany({
+      where: publishedOnly ? { published: true } : undefined,
       orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        image: true,
+        author: true,
+        readTime: true,
+        published: true,
+        createdAt: true,
+        updatedAt: true,
+      }
     })
 
-    return NextResponse.json({ blogPosts })
+    const headers = publishedOnly ? {
+      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+    } : {}
+
+    return NextResponse.json({ blogPosts }, { headers })
   } catch (error) {
     console.error("Error fetching blog posts:", error)
     return NextResponse.json(

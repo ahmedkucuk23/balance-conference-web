@@ -9,9 +9,24 @@ export async function GET() {
     const speakers = await (db as any).speaker.findMany({
       where: { published: true },
       orderBy: { createdAt: "desc" },
+      select: {
+        name: true,
+        slug: true,
+        image: true,
+        shortDescription: true,
+        location: true,
+        motto: true,
+      }
     })
 
-    return NextResponse.json({ speakers })
+    return NextResponse.json(
+      { speakers },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+        }
+      }
+    )
   } catch (error) {
     console.error("Error fetching speakers:", error)
     return NextResponse.json(

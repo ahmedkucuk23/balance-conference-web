@@ -263,13 +263,16 @@ export default async function AboutPage() {
                       </p>
                     </div>
 
-                    <Button 
-                      size="lg" 
+                    <Button
+                      size="lg"
                       className="bg-balance-300 hover:bg-balance-400 text-white rounded-xl w-full sm:w-auto"
+                      asChild
                     >
-                      <Mail className="w-5 h-5 mr-2" />
-                      <span className="hidden sm:inline">Join as an Expert! Drop Us an Email</span>
-                      <span className="sm:hidden">Join as Expert</span>
+                      <a href="/contact">
+                        <Mail className="w-5 h-5 mr-2" />
+                        <span className="hidden sm:inline">Join as an Expert! Drop Us an Email</span>
+                        <span className="sm:hidden">Join as Expert</span>
+                      </a>
                     </Button>
                   </div>
 

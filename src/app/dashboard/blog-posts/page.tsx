@@ -42,7 +42,7 @@ export default function BlogPostsPage() {
 
   const fetchBlogPosts = async () => {
     try {
-      const res = await fetch('/api/blog-posts')
+      const res = await fetch('/api/blog-posts?published=false')
       if (res.ok) {
         const data = await res.json()
         setBlogPosts(data.blogPosts || [])

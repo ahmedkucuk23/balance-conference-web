@@ -1,6 +1,9 @@
 import dynamic from 'next/dynamic';
 import { TopNavigation } from "@/components/blocks/top-navigation";
 import { HeroSection } from "@/components/blocks/hero-section-5";
+import { BannerProvider } from "@/components/blocks/announcement-banner";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Lazy load below-the-fold components
 const GradualBlur = dynamic(() => import("@/components/ui/gradual-blur"));
@@ -10,6 +13,7 @@ const AnimatedMarqueeHero = dynamic(() => import("@/components/ui/hero-3").then(
 const SarajevoConference = dynamic(() => import("@/components/blocks/sarajevo-conference"));
 const PastSpeakers = dynamic(() => import("@/components/blocks/past-speakers").then(mod => ({ default: mod.PastSpeakers })));
 const ShareExpertise = dynamic(() => import("@/components/blocks/share-expertise"));
+const CurvedLoop = dynamic(() => import("@/components/CurvedLoop"));
 const BlogSection = dynamic(() => import("@/components/ui/blog-section").then(mod => ({ default: mod.BlogSection })));
 const HoverFooter = dynamic(() => import("@/components/ui/hover-footer").then(mod => ({ default: mod.HoverFooter })));
 
@@ -28,7 +32,7 @@ const CONFERENCE_IMAGES = [
 
 export default function Home() {
   return (
-    <>
+    <BannerProvider>
       {/* GradualBlur effect for entire page */}
       <GradualBlur
         target="page"
@@ -41,8 +45,8 @@ export default function Home() {
         responsive={true}
         mobileHeight="0rem"
       />
-      
-      <TopNavigation scrollThreshold={880} />
+
+      <TopNavigation scrollThreshold={880} hasBanner={true} />
       <HeroSection />
       <AnimatedMarqueeHero
         tagline="THE ART OF BALANCE"
@@ -60,6 +64,28 @@ export default function Home() {
       />
       <SarajevoConference />
       <ShareExpertise />
+      <section className="w-full bg-black relative">
+        <div className="flex justify-center pt-12 pb-0">
+          <Button
+            size="lg"
+            className="rounded-xl font-semibold text-black text-lg px-8 py-6"
+            style={{ backgroundColor: '#FAB53D' }}
+            asChild
+          >
+            <Link href="/conferences/balance2026">
+              Join Us For the New Edition
+            </Link>
+          </Button>
+        </div>
+        <CurvedLoop
+          marqueeText="✦ SAVE THE DATE ✦ NEW CONFERENCE IS HERE"
+          speed={0.7}
+          curveAmount={400}
+          direction="right"
+          interactive={true}
+          className=""
+        />
+      </section>
       <PastSpeakers />
       
       {/* Latest Insights Section */}
@@ -75,8 +101,8 @@ export default function Home() {
         />
       </section>
     </section>
-      
+
       <HoverFooter />
-    </>
+    </BannerProvider>
   );
 }

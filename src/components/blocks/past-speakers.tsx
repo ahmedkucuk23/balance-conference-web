@@ -24,14 +24,12 @@ export function PastSpeakers() {
       .then(res => res.json())
       .then(data => {
         if (data.speakers) {
-          const formattedSpeakers: Speaker[] = data.speakers
-            .filter((speaker: any) => speaker.published)
-            .map((speaker: any) => ({
-              name: speaker.name,
-              slug: speaker.slug,
-              description: speaker.shortDescription || speaker.location || '',
-              image: speaker.image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&h=1066&fit=crop',
-            }))
+          const formattedSpeakers: Speaker[] = data.speakers.map((speaker: any) => ({
+            name: speaker.name,
+            slug: speaker.slug,
+            description: speaker.shortDescription || speaker.location || '',
+            image: speaker.image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&h=1066&fit=crop',
+          }))
           setSpeakers(formattedSpeakers)
           console.log('Loaded past speakers:', formattedSpeakers)
         }
@@ -77,6 +75,7 @@ export function PastSpeakers() {
 
   return (
     <section className="bg-background py-32 overflow-hidden">
+      {/* Header with max-width constraint */}
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="mb-10 flex items-start justify-between gap-6">
           <div>
@@ -94,7 +93,10 @@ export function PastSpeakers() {
             </Link>
           </Button>
         </div>
+      </div>
 
+      {/* Full width slider container */}
+      <div className="w-full">
         {loading ? (
           <div className="text-center py-20 text-muted-foreground">Loading speakers...</div>
         ) : speakers.length === 0 ? (
@@ -103,7 +105,7 @@ export function PastSpeakers() {
           <>
             {/* Desktop: Infinite Slider with Prev/Next Buttons */}
             <div className="hidden md:block">
-              <div className="relative -mx-6 lg:-mx-12">
+              <div className="relative">
                 <div className="overflow-hidden rounded-4xl p-2 md:p-3">
                   <InfiniteSlider gap={24} duration={60} durationOnHover={100000}>
                     {speakers.map((speaker, idx) => (
@@ -128,7 +130,7 @@ export function PastSpeakers() {
             </div>
 
             {/* Mobile: Swipeable Carousel */}
-            <div className="md:hidden relative">
+            <div className="md:hidden relative px-6">
               <div className="overflow-hidden">
                 <motion.div
                   className="flex"
@@ -204,7 +206,10 @@ export function PastSpeakers() {
             </div>
           </>
         )}
+      </div>
 
+      {/* Mobile button with max-width container */}
+      <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="mt-6 flex justify-center md:hidden">
           <Button asChild size="lg" className="rounded-full px-6">
             <Link href="/speakers">See All Speakers</Link>

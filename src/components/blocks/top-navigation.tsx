@@ -12,17 +12,22 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { useBannerVisibility } from "@/components/blocks/announcement-banner"
 
 export interface TopNavigationProps {
   scrollThreshold?: number // Pixel value for when color should change. If undefined, uses 80% of viewport height
+  hasBanner?: boolean // Whether the page has a banner above the navigation
 }
 
-export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
+export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigationProps = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolledPastHero, setScrolledPastHero] = React.useState(false)
   const pathname = usePathname()
+  const { isBannerVisible } = useBannerVisibility()
 
   React.useEffect(() => {
     let ticking = false
@@ -44,7 +49,7 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-[10000] w-full" style={{ position: 'fixed', top: 0, left: 0, right: 0 }}>
+      <header className={cn("fixed left-0 right-0 z-[10000] w-full", hasBanner && isBannerVisible && "top-[105px] md:top-[47px]")} style={{ position: 'fixed', top: (hasBanner && isBannerVisible) ? undefined : 0, left: 0, right: 0 }}>
         <nav
           className={cn(
             "w-full py-1 sm:py-1.5 transition-all duration-300 relative",
@@ -91,17 +96,57 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <Link href="/conferences" className={cn(
-                        navigationMenuTriggerStyle(),
-                        "bg-transparent transition-colors duration-300",
-                        scrolledPastHero
-                          ? "text-gray-900 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100"
-                          : "text-white hover:bg-white/10 focus:bg-white/10 active:bg-white/10"
-                      )}>
-                        Conferences
-                      </Link>
-                    </NavigationMenuLink>
+                    <NavigationMenuTrigger className={cn(
+                      "bg-transparent transition-colors duration-300",
+                      scrolledPastHero
+                        ? "text-gray-900 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 data-[state=open]:bg-gray-100"
+                        : "text-white hover:bg-white/10 focus:bg-white/10 active:bg-white/10 data-[state=open]:bg-white/10"
+                    )}>
+                      Conferences
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[200px] gap-3 p-4 bg-white">
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href="/conferences"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-accent-magenta focus:bg-gray-100 focus:text-accent-gold"
+                            >
+                              <div className="text-sm font-medium leading-none text-gray-900">All Conferences</div>
+                              <p className="line-clamp-2 text-sm leading-snug text-gray-500">
+                                View all events
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href="/conferences/sarajevo2025"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-accent-magenta focus:bg-gray-100 focus:text-accent-gold"
+                            >
+                              <div className="text-sm font-medium leading-none text-gray-900">Sarajevo 2025</div>
+                              <p className="line-clamp-2 text-sm leading-snug text-gray-500">
+                                May 22, 2025
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href="/conferences/balance2026"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-accent-magenta focus:bg-gray-100 focus:text-accent-gold"
+                            >
+                              <div className="text-sm font-medium leading-none text-gray-900">Balance 2026</div>
+                              <p className="line-clamp-2 text-sm leading-snug text-gray-500">
+                                March 26, 2026
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
@@ -172,7 +217,20 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
 
       {/* Mobile Menu - Outside header to avoid z-index stacking context issues */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-[9999] backdrop-blur-xl bg-[#0A031B]/85">
+        <div
+          className="lg:hidden fixed z-[9999] backdrop-blur-xl bg-[#0A031B]/85"
+          style={hasBanner && isBannerVisible ? {
+            top: '161px',
+            bottom: 0,
+            left: 0,
+            right: 0
+          } : {
+            top: '56px',
+            bottom: 0,
+            left: 0,
+            right: 0
+          }}
+        >
             <div className="flex flex-col h-full w-full px-16 py-24">
               <div className="flex flex-col space-y-8 flex-1">
                 <Link
@@ -205,21 +263,55 @@ export function TopNavigation({ scrollThreshold }: TopNavigationProps = {}) {
                   )}
                   About
                 </Link>
-                <Link
-                  href="/conferences"
-                  className={cn(
-                    "text-2xl font-semibold transition-all duration-300 relative",
-                    pathname === "/conferences" || pathname?.startsWith("/conferences/")
-                      ? "text-white"
-                      : "text-balance-200"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {(pathname === "/conferences" || pathname?.startsWith("/conferences/")) && (
-                    <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
-                  )}
-                  Conferences
-                </Link>
+                <div className="flex flex-col space-y-4">
+                  <Link
+                    href="/conferences"
+                    className={cn(
+                      "text-2xl font-semibold transition-all duration-300 relative",
+                      pathname === "/conferences" || pathname?.startsWith("/conferences/")
+                        ? "text-white"
+                        : "text-balance-200"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {(pathname === "/conferences" || pathname?.startsWith("/conferences/")) && (
+                      <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
+                    )}
+                    Conferences
+                  </Link>
+                  <div className="flex flex-col space-y-3 ml-6">
+                    <Link
+                      href="/conferences/sarajevo2025"
+                      className={cn(
+                        "text-lg font-medium transition-all duration-300 relative",
+                        pathname === "/conferences/sarajevo2025"
+                          ? "text-white"
+                          : "text-balance-200"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {pathname === "/conferences/sarajevo2025" && (
+                        <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-balance-300" />
+                      )}
+                      Sarajevo 2025
+                    </Link>
+                    <Link
+                      href="/conferences/balance2026"
+                      className={cn(
+                        "text-lg font-medium transition-all duration-300 relative",
+                        pathname === "/conferences/balance2026"
+                          ? "text-white"
+                          : "text-balance-200"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {pathname === "/conferences/balance2026" && (
+                        <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-balance-300" />
+                      )}
+                      Balance 2026
+                    </Link>
+                  </div>
+                </div>
                 <Link
                   href="/speakers"
                   className={cn(
