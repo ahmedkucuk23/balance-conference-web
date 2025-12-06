@@ -27,9 +27,9 @@ export async function GET(request: NextRequest) {
 
     const headers = publishedOnly ? {
       'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
-    } : {}
+    } : undefined
 
-    return NextResponse.json({ blogPosts }, { headers })
+    return NextResponse.json({ blogPosts }, headers ? { headers } : undefined)
   } catch (error) {
     console.error("Error fetching blog posts:", error)
     return NextResponse.json(
