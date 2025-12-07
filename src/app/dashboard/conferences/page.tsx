@@ -57,7 +57,7 @@ export default function ConferencesPage() {
       const res = await fetch('/api/conferences')
       if (res.ok) {
         const data = await res.json()
-        setConferences(data)
+        setConferences(data.conferences || [])
       }
     } catch (error) {
       console.error('Error fetching conferences:', error)
