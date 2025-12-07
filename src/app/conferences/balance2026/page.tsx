@@ -112,7 +112,7 @@ export default function Balance2026Page() {
       </div>
 
       {/* Hero Section */}
-      <section style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }} className="w-full h-[50vh] relative overflow-hidden z-10">
+      <section style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }} className="w-full h-[50vh] relative overflow-hidden z-10 pt-20 md:pt-0">
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-6">
           <h1 className="text-5xl md:text-6xl font-bold text-white text-center mb-4">
             Balance Conference 2026: Get Motivated
