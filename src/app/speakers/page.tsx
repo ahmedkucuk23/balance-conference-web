@@ -63,7 +63,7 @@ export default async function SpeakersPage() {
       <section style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }} className="w-full h-[50vh] relative overflow-hidden z-10">
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-6">
           <h1 className="text-5xl md:text-6xl font-bold text-white text-center mb-4">
-            Our Past Speakers
+            Our Speakers
           </h1>
           <p className="text-2xl text-balance-200 text-center">
             Leading voices in wellbeing, leadership, and lifestyle innovation
