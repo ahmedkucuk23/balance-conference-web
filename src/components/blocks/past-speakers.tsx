@@ -20,7 +20,8 @@ export function PastSpeakers() {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
-    fetch('/api/speakers')
+    // Fetch only speakers from Sarajevo 2025 conference (past speakers)
+    fetch('/api/speakers?conferenceSlug=Sarajevo2025')
       .then(res => res.json())
       .then(data => {
         if (data.speakers) {
@@ -31,7 +32,7 @@ export function PastSpeakers() {
             image: speaker.image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&h=1066&fit=crop',
           }))
           setSpeakers(formattedSpeakers)
-          console.log('Loaded past speakers:', formattedSpeakers)
+          console.log('Loaded past speakers (Sarajevo 2025):', formattedSpeakers)
         }
       })
       .catch(err => console.error('Error fetching speakers:', err))
