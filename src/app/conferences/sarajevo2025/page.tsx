@@ -82,7 +82,9 @@ export default function ConferencesPage() {
 
   useEffect(() => {
     // Fetch only speakers from Sarajevo 2025 conference
-    fetch('/api/speakers?conferenceSlug=Sarajevo2025')
+    fetch('/api/speakers?conferenceSlug=Sarajevo2025', {
+      cache: 'no-store'
+    })
       .then(res => res.json())
       .then(data => {
         if (data.speakers) {

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { TopNavigation } from '@/components/blocks/top-navigation'
 import BlurText from '@/components/ui/BlurText'
 import DarkVeil from '@/components/ui/dark-veil'
@@ -14,6 +15,8 @@ import { motion } from 'motion/react'
 import type { Testimonial } from '@/components/ui/testimonials'
 import { Eyebrow } from '@/components/ui/eyebrow'
 import { Target, Brain, Heart, Users, Lightbulb, TrendingUp, Shield, Smile } from 'lucide-react'
+import { TeamSection, type TeamMember } from '@/components/ui/team'
+import { LinesPatternCard, LinesPatternCardBody } from '@/components/ui/card-with-lines-patter'
 
 // Attendee testimonials for the columns section - We'll update these together
 const attendeeTestimonials: TestimonialColumnType[] = [
@@ -32,9 +35,14 @@ const thirdColumn = attendeeTestimonials.slice(6, 9)
 export default function Balance2026Page() {
   const [speakers, setSpeakers] = useState<Testimonial[]>([])
   const [loadingSpeakers, setLoadingSpeakers] = useState(true)
+  const [speakersList, setSpeakersList] = useState<TeamMember[]>([])
+  const [loadingSpeakersList, setLoadingSpeakersList] = useState(true)
 
   useEffect(() => {
-    fetch('/api/speakers')
+    // Fetch speakers for testimonials (with motto)
+    fetch('/api/speakers?conferenceSlug=BalanceConference2026', {
+      cache: 'no-store'
+    })
       .then(res => res.json())
       .then(data => {
         if (data.speakers) {
@@ -52,6 +60,25 @@ export default function Balance2026Page() {
       })
       .catch(err => console.error('Error fetching speakers:', err))
       .finally(() => setLoadingSpeakers(false))
+
+    // Fetch all speakers for the grid list
+    fetch('/api/speakers?conferenceSlug=BalanceConference2026', {
+      cache: 'no-store'
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.speakers) {
+          const teamMembers: TeamMember[] = data.speakers.map((speaker: any) => ({
+            name: speaker.name,
+            role: speaker.shortDescription || speaker.location || '',
+            avatar: speaker.image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&h=1066&fit=crop',
+            slug: speaker.slug,
+          }))
+          setSpeakersList(teamMembers)
+        }
+      })
+      .catch(err => console.error('Error fetching speakers list:', err))
+      .finally(() => setLoadingSpeakersList(false))
   }, [])
 
   return (
@@ -294,6 +321,94 @@ export default function Balance2026Page() {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Speakers 2026 Section */}
+      <section className="relative z-10 py-16" style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }}>
+        <div className="mx-auto px-6" style={{ maxWidth: '1120px' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            className="flex flex-col items-start justify-center mb-8"
+          >
+            <Eyebrow>Speakers</Eyebrow>
+            <h2 className="text-5xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5 text-white text-left">
+              Speakers 2026
+            </h2>
+            <p className="text-left mt-5 opacity-75 text-balance-100">
+              Meet the inspiring voices joining us at Balance Conference 2026.
+            </p>
+          </motion.div>
+          {loadingSpeakersList ? (
+            <div className="text-white text-center py-20">Loading speakers...</div>
+          ) : (
+            <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+              {speakersList.map((member, index) => {
+                const CardContent = (
+                  <>
+                    <img
+                      className="h-[22.5rem] w-full rounded-xl object-cover object-top grayscale-0 transition-all duration-500 md:h-96 md:grayscale md:rounded-md md:hover:grayscale-0 md:group-hover:h-[22.5rem] md:group-hover:rounded-xl"
+                      src={member.avatar}
+                      alt={member.name}
+                      loading="lazy"
+                    />
+                    <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
+                      <div className="flex justify-between">
+                        <h3 className="text-3xl font-semibold transition-all duration-500 tracking-wider md:text-2xl md:tracking-normal md:group-hover:tracking-wider text-white">
+                          {member.name}
+                        </h3>
+                        <span className="text-xs text-balance-200">
+                          _0{index + 1}
+                        </span>
+                      </div>
+                      <div className="mt-1 flex items-center justify-between">
+                        <span className="text-balance-200 inline-block translate-y-0 text-lg font-light opacity-100 transition duration-300 md:text-sm md:translate-y-6 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+                          {member.role}
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                );
+
+                return (
+                  <Link
+                    key={index}
+                    href={`/speakers/${member.slug}`}
+                    className="group overflow-hidden block"
+                  >
+                    {CardContent}
+                  </Link>
+                );
+              })}
+
+              {/* Coming Soon Cards - Always show 3 */}
+              {[1, 2, 3].map((num) => (
+                <div key={`coming-soon-${num}`} className="group overflow-hidden">
+                  <LinesPatternCard
+                    className="h-full border-balance-300/20 bg-[#0A031B]"
+                    gradientClassName="bg-transparent"
+                  >
+                    <LinesPatternCardBody className="flex flex-col items-center justify-center h-[22.5rem] md:h-96">
+                      <div className="text-center space-y-4">
+                        <div className="w-20 h-20 mx-auto rounded-full border-2 border-dashed border-balance-300/50 flex items-center justify-center">
+                          <Users className="w-10 h-10 text-balance-300/70" />
+                        </div>
+                        <h3 className="text-2xl font-semibold text-white">
+                          Coming Soon
+                        </h3>
+                        <p className="text-balance-200 text-sm">
+                          More speakers to be announced
+                        </p>
+                      </div>
+                    </LinesPatternCardBody>
+                  </LinesPatternCard>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

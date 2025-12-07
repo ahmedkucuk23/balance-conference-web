@@ -86,7 +86,9 @@ export default function ConferencesPage() {
   const [loadingSpeakers, setLoadingSpeakers] = useState(true)
 
   useEffect(() => {
-    fetch('/api/speakers')
+    fetch('/api/speakers', {
+      cache: 'no-store'
+    })
       .then(res => res.json())
       .then(data => {
         if (data.speakers) {
