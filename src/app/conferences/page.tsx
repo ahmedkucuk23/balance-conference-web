@@ -91,7 +91,7 @@ export default function ConferencesPage() {
       .then(data => {
         if (data.speakers) {
           const speakerTestimonials: Testimonial[] = data.speakers
-            .filter((speaker: any) => speaker.published && speaker.motto)
+            .filter((speaker: any) => speaker.motto)
             .map((speaker: any) => ({
               name: speaker.name,
               designation: speaker.shortDescription || speaker.location || 'Speaker',

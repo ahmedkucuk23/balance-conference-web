@@ -3,9 +3,20 @@ import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { checkAuthorization } from "@/lib/auth-helpers"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Public endpoint - no auth required for viewing speakers
+    const { isAuthorized } = await checkAuthorization()
+
+    // If authorized (dashboard), return all fields including unpublished
+    if (isAuthorized) {
+      const speakers = await (db as any).speaker.findMany({
+        orderBy: { createdAt: "desc" },
+      })
+
+      return NextResponse.json({ speakers })
+    }
+
+    // Public endpoint - limited fields, only published speakers
     const speakers = await (db as any).speaker.findMany({
       where: { published: true },
       orderBy: { createdAt: "desc" },
