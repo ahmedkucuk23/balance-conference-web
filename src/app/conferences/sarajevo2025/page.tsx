@@ -81,7 +81,8 @@ export default function ConferencesPage() {
   const [loadingSpeakers, setLoadingSpeakers] = useState(true)
 
   useEffect(() => {
-    fetch('/api/speakers')
+    // Fetch only speakers from Sarajevo 2025 conference
+    fetch('/api/speakers?conferenceSlug=Sarajevo2025')
       .then(res => res.json())
       .then(data => {
         if (data.speakers) {
@@ -232,6 +233,49 @@ export default function ConferencesPage() {
         </div>
       </section>
 
+      {/* Speakers Testimonials Section */}
+      <section className="relative z-10 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 80 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="flex flex-col items-start justify-center max-w-6xl mx-auto mb-10 px-12 lg:px-16 xl:px-0"
+        >
+          <Eyebrow>Testimonials</Eyebrow>
+          <h2 className="text-5xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5 text-white text-left">
+            What our Speakers say
+          </h2>
+          <p className="text-left mt-5 opacity-75 text-balance-100">
+            See what our speakers have to say about Balance Conference.
+          </p>
+        </motion.div>
+        <div className="mx-auto max-w-8xl px-6 lg:px-12 flex items-center justify-center">
+          {loadingSpeakers ? (
+            <div className="text-white text-center py-20">Loading speakers...</div>
+          ) : speakers.length > 0 ? (
+            <CircularTestimonials
+              testimonials={speakers}
+              autoplay={true}
+              colors={{
+                name: "#f7f7ff",
+                designation: "#e1e1e1",
+                testimony: "#f1f1f7",
+                arrowBackground: "#141414",
+                arrowForeground: "#f1f1f7",
+                arrowHoverBackground: "#4D2AA0",
+              }}
+              fontSizes={{
+                name: "3rem",
+                designation: "1rem",
+                quote: "1.125rem",
+              }}
+            />
+          ) : (
+            <div className="text-white border border-dotted border-balance-200/30 rounded-lg text-center py-20">No speakers available yet</div>
+          )}
+        </div>
+      </section>
 
       {/* Attendees Testimonials Columns Section */}
       <section className="relative z-10 py-16" style={{ backgroundColor: 'rgba(10, 3, 27, 0.5)', backdropFilter: 'blur(12px)' }}>
