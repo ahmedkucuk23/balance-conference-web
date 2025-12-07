@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
       { speakers },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+          'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
         }
       }
     )
