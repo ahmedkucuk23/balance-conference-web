@@ -6,19 +6,41 @@ import { checkAuthorization } from "@/lib/auth-helpers"
 export async function GET(request: NextRequest) {
   try {
     const { isAuthorized } = await checkAuthorization()
+    const { searchParams } = new URL(request.url)
+    const conferenceId = searchParams.get('conferenceId')
+    const conferenceSlug = searchParams.get('conferenceSlug')
 
     // If authorized (dashboard), return all fields including unpublished
     if (isAuthorized) {
       const speakers = await (db as any).speaker.findMany({
         orderBy: { createdAt: "desc" },
+        include: {
+          conferences: {
+            include: {
+              conference: true
+            }
+          }
+        }
       })
 
       return NextResponse.json({ speakers })
     }
 
+    // Build where clause for filtering
+    let whereClause: any = { published: true }
+
+    if (conferenceId || conferenceSlug) {
+      // If filtering by conference, add the relation filter
+      whereClause.conferences = {
+        some: conferenceId
+          ? { conferenceId }
+          : { conference: { slug: conferenceSlug } }
+      }
+    }
+
     // Public endpoint - limited fields, only published speakers
     const speakers = await (db as any).speaker.findMany({
-      where: { published: true },
+      where: whereClause,
       orderBy: { createdAt: "desc" },
       select: {
         name: true,
@@ -70,6 +92,7 @@ export async function POST(request: NextRequest) {
       instagram,
       website,
       published,
+      conferenceIds = [],
     } = body
 
     const normalizeSlug = (s: string) =>
@@ -109,7 +132,19 @@ export async function POST(request: NextRequest) {
         instagram,
         website,
         published: published ?? true,
+        conferences: {
+          create: (conferenceIds as string[]).map((conferenceId: string) => ({
+            conferenceId,
+          })),
+        },
       },
+      include: {
+        conferences: {
+          include: {
+            conference: true
+          }
+        }
+      }
     })
 
     return NextResponse.json(speaker, { status: 201 })

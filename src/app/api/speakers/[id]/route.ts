@@ -59,6 +59,7 @@ export async function PUT(
       instagram,
       website,
       published,
+      conferenceIds,
     } = body
 
     const normalizeSlug = (s: string) =>
@@ -84,6 +85,13 @@ export async function PUT(
       }
     }
 
+    // First, delete existing conference relationships if conferenceIds is provided
+    if (conferenceIds !== undefined) {
+      await (db as any).conferenceSpeaker.deleteMany({
+        where: { speakerId: id },
+      })
+    }
+
     const speaker = await (db as any).speaker.update({
       where: { id },
       data: {
@@ -101,7 +109,21 @@ export async function PUT(
         instagram,
         website,
         published,
+        ...(conferenceIds !== undefined && {
+          conferences: {
+            create: (conferenceIds as string[]).map((conferenceId: string) => ({
+              conferenceId,
+            })),
+          },
+        }),
       },
+      include: {
+        conferences: {
+          include: {
+            conference: true
+          }
+        }
+      }
     })
 
     return NextResponse.json(speaker)

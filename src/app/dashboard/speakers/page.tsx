@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Plus, Trash2, Edit, Users } from "lucide-react"
 
+type Conference = {
+  id: string
+  slug: string
+  title: string
+  date?: string
+}
+
 type Speaker = {
   id: string
   slug: string
@@ -22,13 +29,16 @@ type Speaker = {
   instagram?: string
   website?: string
   published: boolean
+  conferences?: { id: string; conferenceId: string; conference: Conference }[]
 }
 
 export default function SpeakersPage() {
   const [speakers, setSpeakers] = useState<Speaker[]>([])
+  const [conferences, setConferences] = useState<Conference[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingSpeaker, setEditingSpeaker] = useState<Speaker | null>(null)
+  const [selectedConferenceIds, setSelectedConferenceIds] = useState<string[]>([])
   const [formData, setFormData] = useState<Partial<Speaker>>({
     name: '',
     slug: '',
@@ -48,7 +58,20 @@ export default function SpeakersPage() {
 
   useEffect(() => {
     fetchSpeakers()
+    fetchConferences()
   }, [])
+
+  const fetchConferences = async () => {
+    try {
+      const res = await fetch('/api/conferences')
+      if (res.ok) {
+        const data = await res.json()
+        setConferences(data.conferences || [])
+      }
+    } catch (error) {
+      console.error('Error fetching conferences:', error)
+    }
+  }
 
   const fetchSpeakers = async () => {
     try {
@@ -66,24 +89,28 @@ export default function SpeakersPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    const url = editingSpeaker 
+
+    const url = editingSpeaker
       ? `/api/speakers/${editingSpeaker.id}`
       : '/api/speakers'
-    
+
     const method = editingSpeaker ? 'PUT' : 'POST'
 
     try {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          conferenceIds: selectedConferenceIds,
+        }),
       })
 
       if (res.ok) {
         await fetchSpeakers()
         setIsFormOpen(false)
         setEditingSpeaker(null)
+        setSelectedConferenceIds([])
         setFormData({
           name: '',
           slug: '',
@@ -109,6 +136,7 @@ export default function SpeakersPage() {
   const handleEdit = (speaker: Speaker) => {
     setEditingSpeaker(speaker)
     setFormData(speaker)
+    setSelectedConferenceIds(speaker.conferences?.map(c => c.conferenceId) || [])
     setIsFormOpen(true)
   }
 
@@ -162,6 +190,7 @@ export default function SpeakersPage() {
           onClick={() => {
             setIsFormOpen(!isFormOpen)
             setEditingSpeaker(null)
+            setSelectedConferenceIds([])
             setFormData({
               name: '',
               slug: '',
@@ -344,6 +373,36 @@ export default function SpeakersPage() {
                   onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                   className="bg-[#0A031B] border-balance-200/20 text-white"
                 />
+              </div>
+              <div className="md:col-span-2">
+                <Label className="text-white mb-2 block">Conferences</Label>
+                <div className="space-y-2 bg-[#0A031B] border border-balance-200/20 rounded-md p-4 max-h-48 overflow-y-auto">
+                  {conferences.length === 0 ? (
+                    <p className="text-balance-200 text-sm">No conferences available yet</p>
+                  ) : (
+                    conferences.map((conference) => (
+                      <div key={conference.id} className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id={`conference-${conference.id}`}
+                          checked={selectedConferenceIds.includes(conference.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedConferenceIds([...selectedConferenceIds, conference.id])
+                            } else {
+                              setSelectedConferenceIds(selectedConferenceIds.filter(id => id !== conference.id))
+                            }
+                          }}
+                          className="w-4 h-4"
+                        />
+                        <Label htmlFor={`conference-${conference.id}`} className="text-white text-sm cursor-pointer">
+                          {conference.title} {conference.date && `(${new Date(conference.date).toLocaleDateString()})`}
+                        </Label>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <p className="text-xs text-balance-200 mt-1">Select which conferences this speaker is/was part of</p>
               </div>
               <div className="flex items-center gap-2">
                 <input

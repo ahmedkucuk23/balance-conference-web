@@ -13,7 +13,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     })
 
-    return NextResponse.json(conferences)
+    return NextResponse.json({ conferences })
   } catch (error) {
     console.error("Error fetching conferences:", error)
     return NextResponse.json(
