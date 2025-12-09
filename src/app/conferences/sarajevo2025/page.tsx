@@ -306,6 +306,9 @@ export default function ConferencesPage() {
         </div>
       </section>
 
+      {/* By the Numbers Section */}
+      <ByTheNumbers />
+
       {/* Latest Insights Section */}
       <section className="relative max-w-6xl mx-auto z-10 py-16">
         <BlogSection
