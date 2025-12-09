@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { TopNavigation } from '@/components/blocks/top-navigation'
+
+const CurvedLoop = dynamic(() => import("@/components/CurvedLoop"))
 import BlurText from '@/components/ui/BlurText'
 import DarkVeil from '@/components/ui/dark-veil'
 import { HoverFooter } from '@/components/ui/hover-footer'
@@ -14,7 +17,7 @@ import { BlogSection } from '@/components/ui/blog-section'
 import { motion } from 'motion/react'
 import type { Testimonial } from '@/components/ui/testimonials'
 import { Eyebrow } from '@/components/ui/eyebrow'
-import { Target, Brain, Heart, Users, Lightbulb, TrendingUp, Shield, Smile } from 'lucide-react'
+import { Target, Brain, Heart, Users, Lightbulb, TrendingUp, Shield, Smile, Hourglass, Hammer, HeartHandshake, Laugh, CloudSun, Briefcase } from 'lucide-react'
 import { TeamSection, type TeamMember } from '@/components/ui/team'
 import { LinesPatternCard, LinesPatternCardBody } from '@/components/ui/card-with-lines-patter'
 
@@ -181,7 +184,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <Target className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <Hourglass className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Better Time Management</p>
             </motion.div>
@@ -194,7 +197,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <Brain className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <Hammer className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Breaking Old Patterns</p>
             </motion.div>
@@ -207,7 +210,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <Heart className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <HeartHandshake className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Building Healthier Habits</p>
             </motion.div>
@@ -220,7 +223,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <Users className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <Laugh className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Managing Stress</p>
             </motion.div>
@@ -234,7 +237,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <Lightbulb className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <CloudSun className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Improving Clarity</p>
             </motion.div>
@@ -247,7 +250,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <TrendingUp className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <Brain className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Boosting Mental Well-being</p>
             </motion.div>
@@ -260,7 +263,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <Shield className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <Briefcase className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Increasing Productivity</p>
             </motion.div>
@@ -273,7 +276,7 @@ export default function Balance2026Page() {
               className="flex flex-col items-start"
             >
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                <Smile className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <Users className="w-8 h-8 md:w-10 md:h-10 text-white" />
               </div>
               <p className="font-semibold text-base md:text-lg" style={{ color: '#EFEAFD' }}>Connect with Others</p>
             </motion.div>
@@ -322,6 +325,18 @@ export default function Balance2026Page() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Curved Loop Section */}
+      <section className="w-full relative z-10">
+        <CurvedLoop
+          marqueeText="✦ BALANCE CONFERENCE 2026 ✦ GET MOTIVATED"
+          speed={0.7}
+          curveAmount={400}
+          direction="right"
+          interactive={true}
+          className=""
+        />
       </section>
 
       {/* Speakers 2026 Section */}

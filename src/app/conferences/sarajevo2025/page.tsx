@@ -235,6 +235,9 @@ export default function ConferencesPage() {
         </div>
       </section>
 
+      {/* By the Numbers Section */}
+      <ByTheNumbers />
+
       {/* Speakers Testimonials Section */}
       <section className="relative z-10 py-16">
         <motion.div
@@ -305,9 +308,6 @@ export default function ConferencesPage() {
           </div>
         </div>
       </section>
-
-      {/* By the Numbers Section */}
-      <ByTheNumbers />
 
       {/* Latest Insights Section */}
       <section className="relative max-w-6xl mx-auto z-10 py-16">

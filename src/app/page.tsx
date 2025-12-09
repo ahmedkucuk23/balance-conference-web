@@ -64,8 +64,16 @@ export default function Home() {
       />
       <SarajevoConference />
       <ShareExpertise />
-      <section className="w-full bg-black relative">
-        <div className="flex justify-center pt-12 pb-0">
+      <section className="w-full bg-black relative -mt-16 md:-mt-20">
+        <CurvedLoop
+          marqueeText="✦ SAVE THE DATE ✦ NEW CONFERENCE IS HERE"
+          speed={0.7}
+          curveAmount={400}
+          direction="right"
+          interactive={true}
+          className=""
+        />
+        <div className="flex justify-center pt-0 pb-12">
           <Button
             size="lg"
             className="rounded-xl font-semibold text-black text-lg px-8 py-6"
@@ -77,14 +85,6 @@ export default function Home() {
             </Link>
           </Button>
         </div>
-        <CurvedLoop
-          marqueeText="✦ SAVE THE DATE ✦ NEW CONFERENCE IS HERE"
-          speed={0.7}
-          curveAmount={400}
-          direction="right"
-          interactive={true}
-          className=""
-        />
       </section>
       <PastSpeakers />
       

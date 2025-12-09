@@ -30,7 +30,7 @@ export default function ShareExpertise({
   videoId = 'V-bhHokihzc',
 }: ShareExpertiseProps) {
   return (
-    <section className="relative bg-balance-500 py-16 md:py-20 lg:pt-40 pb-0 overflow-hidden">
+    <section className="relative bg-balance-500 py-16 md:py-20 lg:pt-40 lg:pb-0 pb-0 overflow-hidden">
       {/* DarkVeil background effect */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <DarkVeil
