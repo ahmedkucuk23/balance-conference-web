@@ -5,6 +5,9 @@ import DarkVeil from '@/components/ui/dark-veil';
 import GradualBlur from '@/components/ui/gradual-blur';
 import { db } from '@/lib/db';
 
+// Revalidate this page every 60 seconds
+export const revalidate = 60;
+
 export default async function BlogPage() {
 	// Fetch published blog posts from database
 	const blogPosts = await (db as any).blogPost.findMany({

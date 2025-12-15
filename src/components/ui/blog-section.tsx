@@ -117,7 +117,7 @@ export function BlogSection({
 			<div className={gridClasses}>
 				{displayedBlogs.map((blog) => (
 					<Link
-						key={blog.title}
+						key={blog.slug}
 						href={`/blog/${blog.slug}`}
 						className="flex flex-col gap-3 rounded-xl overflow-hidden bg-[#0A031B]/40 backdrop-blur-xl border border-balance-200/10 transition-all duration-300 hover:border-balance-300/30 hover:bg-[#0A031B]/60 group"
 					>
