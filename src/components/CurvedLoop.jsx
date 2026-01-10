@@ -11,6 +11,7 @@ const CurvedLoop = ({
   direction = 'left',
   interactive = true
 }) => {
+  const [mounted, setMounted] = useState(false);
   const text = useMemo(() => {
     const hasTrailing = /\s|\u00A0$/.test(marqueeText);
     return (hasTrailing ? marqueeText.replace(/\s+$/, '') : marqueeText) + '\u00A0';
@@ -23,6 +24,10 @@ const CurvedLoop = ({
   const [offset, setOffset] = useState(0);
   const uid = useId();
   const pathId = `curve-${uid}`;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const pathD = `M-100,40 Q500,${40 + curveAmount} 1540,40`;
 
   const dragRef = useRef(false);
@@ -105,6 +110,10 @@ const CurvedLoop = ({
   };
 
   const cursorStyle = interactive ? (dragRef.current ? 'grabbing' : 'grab') : 'auto';
+
+  if (!mounted) {
+    return <div className="curved-loop-jacket" style={{ visibility: 'hidden' }} />;
+  }
 
   return (
     <div

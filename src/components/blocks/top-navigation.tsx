@@ -26,8 +26,13 @@ export interface TopNavigationProps {
 export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigationProps = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolledPastHero, setScrolledPastHero] = React.useState(false)
+  const [mounted, setMounted] = React.useState(false)
   const pathname = usePathname()
   const { isBannerVisible } = useBannerVisibility()
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   React.useEffect(() => {
     let ticking = false
@@ -79,7 +84,7 @@ export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigat
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
-              <NavigationMenu>
+              {mounted && <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
@@ -191,7 +196,7 @@ export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigat
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 </NavigationMenuList>
-              </NavigationMenu>
+              </NavigationMenu>}
             </div>
 
             {/* Mobile Menu Button */}
