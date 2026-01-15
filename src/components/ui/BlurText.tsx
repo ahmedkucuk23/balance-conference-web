@@ -1,17 +1,34 @@
 'use client'
 
+import React from 'react';
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState, useMemo } from 'react';
 
-const buildKeyframes = (from: any, steps: any) => {
-  const keys = new Set([...Object.keys(from), ...steps.flatMap((s: any) => Object.keys(s))]);
+const buildKeyframes = (from: Record<string, any>, steps: Array<Record<string, any>>) => {
+  const keys = new Set([...Object.keys(from), ...steps.flatMap(s => Object.keys(s))]);
 
-  const keyframes: any = {};
+  const keyframes: Record<string, any[]> = {};
   keys.forEach(k => {
-    keyframes[k] = [from[k], ...steps.map((s: any) => s[k])];
+    keyframes[k] = [from[k], ...steps.map(s => s[k])];
   });
   return keyframes;
 };
+
+interface BlurTextProps {
+  text?: string;
+  segments?: Array<{ text: string; color?: string; lineBreak?: boolean }>;
+  delay?: number;
+  className?: string;
+  animateBy?: 'words' | 'letters';
+  direction?: 'top' | 'bottom';
+  threshold?: number;
+  rootMargin?: string;
+  animationFrom?: Record<string, any>;
+  animationTo?: Array<Record<string, any>>;
+  easing?: (t: number) => number;
+  onAnimationComplete?: () => void;
+  stepDuration?: number;
+}
 
 const BlurText = ({
   text = '',
@@ -25,24 +42,24 @@ const BlurText = ({
   animationFrom,
   animationTo,
   easing = (t: number) => t,
-  onAnimationComplete = undefined,
+  onAnimationComplete,
   stepDuration = 0.35
-}: any) => {
+}: BlurTextProps) => {
   // Group letters by words when animating by letters to prevent word breaking
   const processElements = useMemo(() => {
     const textSegments = segments || [{ text, color: undefined, lineBreak: false }];
-    const result: any[] = [];
+    const result: Array<any> = [];
     let globalIndex = 0;
     let globalLetterIndex = 0;
 
-    textSegments.forEach((segment: any, segmentIdx: any) => {
+    textSegments.forEach((segment, segmentIdx) => {
       if (segment.lineBreak && result.length > 0) {
         result.push({ type: 'break' });
       }
 
       if (animateBy === 'words') {
         const words = segment.text.split(' ');
-        words.forEach((word: any, wordIdx: any) => {
+        words.forEach((word, wordIdx) => {
           result.push({
             type: 'word',
             content: word,
@@ -52,11 +69,11 @@ const BlurText = ({
         });
       } else {
         const words = segment.text.split(' ');
-        words.forEach((word: any, wordIndex: any) => {
+        words.forEach((word, wordIndex) => {
           const letters = word.split('');
           result.push({
             type: 'word-group',
-            letters: letters.map((letter: any, letterIndex: any) => ({
+            letters: letters.map((letter, letterIndex) => ({
               content: letter,
               globalIndex: globalLetterIndex++
             })),
@@ -74,21 +91,21 @@ const BlurText = ({
   }, [text, segments, animateBy]);
 
   const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (!ref.current) return;
-    const currentRef = ref.current;
+    const element = ref.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          if (currentRef) observer.unobserve(currentRef);
+          observer.unobserve(element);
         }
       },
       { threshold, rootMargin }
     );
-    observer.observe(currentRef);
+    observer.observe(element);
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [threshold, rootMargin]);
@@ -126,7 +143,7 @@ const BlurText = ({
   // Check if text-center or text-right is in className and add appropriate flex justification
   const isCentered = className.includes('text-center');
   const isRightAligned = className.includes('text-right');
-  const flexStyle = {
+  const flexStyle: React.CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
     ...(isCentered && { justifyContent: 'center' }),
@@ -143,12 +160,12 @@ const BlurText = ({
 
         if (animateBy === 'words') {
           const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
-          const spanTransition: any = {
+          const spanTransition = {
             duration: totalDuration,
             times,
-            delay: (element.index * delay) / 1000
+            delay: (element.index * delay) / 1000,
+            ease: easing
           };
-          spanTransition.ease = easing;
 
           return (
             <motion.span
@@ -180,15 +197,15 @@ const BlurText = ({
 
             return (
               <span key={`word-${element.wordIndex}`} className="inline-block whitespace-nowrap" style={element.color ? { color: element.color } : undefined}>
-                {element.letters.map((letter: any, letterIdx: any) => {
+                {element.letters.map((letter: { content: string }, letterIdx: number) => {
                   const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
                   const globalLetterIndex = letterCount + letterIdx;
-                  const spanTransition: any = {
+                  const spanTransition = {
                     duration: totalDuration,
                     times,
-                    delay: (globalLetterIndex * delay) / 1000
+                    delay: (globalLetterIndex * delay) / 1000,
+                    ease: easing
                   };
-                  spanTransition.ease = easing;
                   const isLast = globalLetterIndex === totalElements - 1;
 
                   return (

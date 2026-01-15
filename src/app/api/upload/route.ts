@@ -1,54 +1,60 @@
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
-import { promises as fs } from "fs"
+import { NextResponse } from "next/server"
+import { writeFile } from "fs/promises"
 import path from "path"
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const formData = await request.formData()
-    const file = formData.get("file")
+    const file = formData.get("file") as File | null
 
-    if (!file || typeof file === "string") {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 })
+    if (!file) {
+      return NextResponse.json(
+        { error: "No file provided" },
+        { status: 400 }
+      )
     }
 
-    // Validate type
-    const allowed = ["image/jpeg", "image/png", "image/webp"]
-    // @ts-ignore - Blob has type property in runtime
-    const mime = file.type as string | undefined
-    if (!mime || !allowed.includes(mime)) {
-      return NextResponse.json({ error: "Unsupported file type" }, { status: 400 })
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json(
+        { error: "Invalid file type. Allowed: JPEG, PNG, WebP, GIF" },
+        { status: 400 }
+      )
     }
 
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { error: "File too large. Maximum size is 5MB" },
+        { status: 400 }
+      )
+    }
 
-    // Prepare destination
-    const uploadsDir = path.join(process.cwd(), "public", "uploads", "speakers")
-    await fs.mkdir(uploadsDir, { recursive: true })
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
 
-    // Unique filename
-    const ext = mime === "image/png" ? "png" : mime === "image/webp" ? "webp" : "jpg"
-    const baseName = (formData.get("filename") as string | null) || "speaker"
-    const safeBase = baseName.toLowerCase().replace(/[^a-z0-9\-]+/g, "-").replace(/(^-|-$)/g, "")
-    const filename = `${Date.now()}-${safeBase || "speaker"}.${ext}`
-    const filePath = path.join(uploadsDir, filename)
+    // Generate unique filename
+    const timestamp = Date.now()
+    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
+    const filename = `${timestamp}-${originalName}`
 
-    await fs.writeFile(filePath, buffer)
+    // Save to public/uploads
+    const uploadDir = path.join(process.cwd(), "public", "uploads")
+    const filepath = path.join(uploadDir, filename)
 
-    // Public URL path
-    const publicPath = `/uploads/speakers/${filename}`
+    await writeFile(filepath, buffer)
 
-    return NextResponse.json({ url: publicPath }, { status: 201 })
-  } catch (err) {
-    console.error("Upload error:", err)
-    return NextResponse.json({ error: "Failed to upload image" }, { status: 500 })
+    // Return the public URL
+    const url = `/uploads/${filename}`
+
+    return NextResponse.json({ url, filename })
+  } catch (error) {
+    console.error("Error uploading file:", error)
+    return NextResponse.json(
+      { error: "Failed to upload file" },
+      { status: 500 }
+    )
   }
 }
-
-

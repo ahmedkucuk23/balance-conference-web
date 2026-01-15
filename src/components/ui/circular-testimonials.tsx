@@ -6,7 +6,6 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -16,7 +15,6 @@ interface Testimonial {
   name: string;
   designation: string;
   src: string;
-  slug?: string;
 }
 interface Colors {
   name?: string;
@@ -73,8 +71,6 @@ export const CircularTestimonials = ({
   const [hoverPrev, setHoverPrev] = useState(false);
   const [hoverNext, setHoverNext] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1200);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const autoplayIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -129,32 +125,6 @@ export const CircularTestimonials = ({
     return () => window.removeEventListener("keydown", handleKey);
   }, [handlePrev, handleNext]);
 
-  // Touch handlers for swipe
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      handleNext();
-    }
-    if (isRightSwipe) {
-      handlePrev();
-    }
-  };
-
   // Compute transforms for each image (always show 3: left, center, right)
   function getImageStyle(index: number): React.CSSProperties {
     const gap = calculateGap(containerWidth);
@@ -175,21 +145,19 @@ export const CircularTestimonials = ({
     if (isLeft) {
       return {
         zIndex: 2,
-        opacity: .99,
+        opacity: .9,
         pointerEvents: "auto",
         transform: `translateX(-${gap}px) translateY(-${maxStickUp}px) scale(0.85) rotateY(5deg)`,
         transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
-        filter: "blur(4px)",
       };
     }
     if (isRight) {
       return {
         zIndex: 2,
-        opacity: .99,
+        opacity: .9,
         pointerEvents: "auto",
         transform: `translateX(${gap}px) translateY(-${maxStickUp}px) scale(0.85) rotateY(-5deg)`,
         transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
-        filter: "blur(4px)",
       };
     }
     // Hide all other images
@@ -213,43 +181,20 @@ export const CircularTestimonials = ({
       <div className="grid md:grid-cols-2 gap-8 md:gap-28 ">
         {/* Images */}
         <div
-          className="relative w-full h-96 perspective-1000"
+          className="relative w-full h-[28rem] perspective-1000"
           ref={imageContainerRef}
           style={{ perspective: "900px" }}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
         >
-          {testimonials.map((testimonial, index) => {
-            const ImageElement = (
-              <img
-                key={testimonial.src}
-                src={testimonial.src}
-                alt={testimonial.name}
-                className="absolute w-full h-full object-cover rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)]"
-                data-index={index}
-                style={getImageStyle(index)}
-              />
-            );
-
-            return testimonial.slug ? (
-              <Link
-                key={testimonial.src}
-                href={`/speakers/${testimonial.slug}`}
-                className="absolute w-full h-full"
-                style={getImageStyle(index)}
-              >
-                <img
-                  src={testimonial.src}
-                  alt={testimonial.name}
-                  className="w-full h-full object-cover rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] cursor-pointer hover:shadow-[0_15px_40px_rgba(0,0,0,0.3)] transition-shadow"
-                  data-index={index}
-                />
-              </Link>
-            ) : (
-              ImageElement
-            );
-          })}
+          {testimonials.map((testimonial, index) => (
+            <img
+              key={testimonial.src}
+              src={testimonial.src}
+              alt={testimonial.name}
+              className="absolute w-full h-full object-cover object-top rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)]"
+              data-index={index}
+              style={getImageStyle(index)}
+            />
+          ))}
         </div>
         {/* Content */}
         <div className="flex flex-col justify-between">
@@ -263,7 +208,7 @@ export const CircularTestimonials = ({
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <h2
-                className="font-bold mb-1 leading-tight"
+                className="font-bold mb-1"
                 style={{ color: colorName, fontSize: fontSizeName }}
               >
                 {activeTestimonial.name}
@@ -334,7 +279,7 @@ export const CircularTestimonials = ({
           </AnimatePresence>
           <div className="flex gap-6 pt-12 md:pt-4">
             <button
-              className="w-[4rem] h-[4rem] rounded-full flex items-center justify-center cursor-pointer transition-colors"
+              className="w-[4rem] h-[4rem] rounded-full flex items-center justify-center cursor-pointer transition-colors border border-balance-400"
               onClick={handlePrev}
               style={{
                 backgroundColor: hoverPrev ? colorArrowHoverBg : colorArrowBg,
@@ -346,7 +291,7 @@ export const CircularTestimonials = ({
               <ChevronLeft size={24} color={colorArrowFg} />
             </button>
             <button
-              className="w-[4rem] h-[4rem] rounded-full flex items-center justify-center cursor-pointer transition-colors"
+              className="w-[4rem] h-[4rem] rounded-full flex items-center justify-center cursor-pointer transition-colors border-border"
               onClick={handleNext}
               style={{
                 backgroundColor: hoverNext ? colorArrowHoverBg : colorArrowBg,

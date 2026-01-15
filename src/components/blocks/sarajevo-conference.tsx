@@ -35,7 +35,7 @@ export default function SarajevoConference({
   ],
   howTitle = 'The result?',
   howDescription = 'A sold-out event, record engagement, powerful partnerships, and media buzz across the region. Attendees called it unlike anything BiH had ever seen, a space where inspiration, movement, mindfulness, and connection came to life.',
-  ctaHref = '/conferences/sarajevo2025',
+  ctaHref = '#',
   ctaLabel = 'See the Full Story in Numbers',
   nextChapterText = 'The next chapter of Balance is just around the corner.',
 }: SarajevoConferenceProps) {
@@ -49,7 +49,7 @@ export default function SarajevoConference({
             <h6 className="text-xs font-medium uppercase tracking-[0.06em] text-primary">
               {eyebrow}
             </h6>
-            <h2 className="text-5xl leading-none md:text-5xl lg:text-6xl font-extrabold text-balance-300">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-balance-300">
               {title}
             </h2>
             <p className="text-base md:text-lg leading-relaxed text-muted-foreground">

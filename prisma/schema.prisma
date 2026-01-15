@@ -6,22 +6,24 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // NextAuth required models
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id            String     @id @default(cuid())
+  email         String     @unique
   name          String?
   image         String?
   emailVerified DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   accounts      Account[]
   sessions      Session[]
+  blogPosts     BlogPost[]
 }
 
 model Account {
@@ -62,102 +64,135 @@ model VerificationToken {
 // Add your custom models below this line
 
 model Speaker {
-  id              String   @id @default(cuid())
-  slug            String   @unique
-  name            String
-  email           String?
-  location        String?
-  image           String?
-  shortDescription String?
-  bio             String?  // JSON array stored as string, parse in application
-  quote           String?
-  motto           String?  // JSON object stored as string, parse in application
-  twitter         String?
-  linkedin        String?
-  instagram       String?
-  website         String?
-  published       Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  conferences     ConferenceSpeaker[]
-
-  @@index([slug])
-  @@index([published])
+  id             String      @id @default(cuid())
+  slug           String      @unique
+  name           String
+  topic          String
+  topic_en       String?
+  bio            String
+  bio_en         String?
+  details        String?
+  details_en     String?
+  image          String
+  link           String?
+  location       String?
+  location_en    String?
+  jobDescription String?
+  jobDescription_en String?
+  facebook       String?
+  instagram      String?
+  linkedin       String?
+  webpage        String?
+  review         String?
+  review_en      String?
+  isTbd          Boolean     @default(false)
+  year           Int         @default(2026)
+  order          Int         @default(0)
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  conferenceId   String?
+  conference     Conference? @relation(fields: [conferenceId], references: [id])
 }
 
 model Conference {
-  id              String   @id @default(cuid())
-  slug            String   @unique
-  title           String
-  location        String?  // e.g., "Sarajevo, Bosnia and Herzegovina"
-  date            DateTime?
-  description     String?  // Main description/intro
-  eyebrow         String?  // Small label above title (e.g., "Our latest edition")
-  howTitle        String?  // Section title (e.g., "The result?")
-  howDescription  String?  // Result/outcome description
-  nextChapterText String?  // Call-to-action text
-  participants    Int      @default(0)
-  speakersCount   Int      @default(0)
-  mediaOutlets    Int      @default(0)
-  influencers     Int      @default(0)
-  featured        Boolean  @default(false)
-  published       Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  speakers        ConferenceSpeaker[]
-
-  @@index([slug])
-  @@index([published])
-  @@index([featured])
-  @@index([date])
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  year        Int
+  date        DateTime?
+  endDate     DateTime?
+  venue       String?
+  address     String?
+  city        String?
+  country     String?
+  image       String?
+  isActive    Boolean   @default(true)
+  isFeatured  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  speakers    Speaker[]
+  tickets     Ticket[]
 }
 
-// Join table for many-to-many relationship between Conference and Speaker
-model ConferenceSpeaker {
-  id           String     @id @default(cuid())
-  conferenceId String
-  speakerId    String
-  createdAt    DateTime   @default(now())
-
-  conference   Conference @relation(fields: [conferenceId], references: [id], onDelete: Cascade)
-  speaker      Speaker    @relation(fields: [speakerId], references: [id], onDelete: Cascade)
-
-  @@unique([conferenceId, speakerId])
-  @@index([conferenceId])
-  @@index([speakerId])
+model BlogPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String?
+  content     String
+  image       String?
+  authorId    String?
+  author      User?     @relation(fields: [authorId], references: [id])
+  category    String?
+  tags        String?
+  isPublished Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-// Contact form submissions
 model ContactSubmission {
   id        String   @id @default(cuid())
   name      String
   email     String
+  phone     String?
+  company   String?
+  subject   String?
   message   String
-  read      Boolean  @default(false)
+  type      String?  @default("general")
+  status    String   @default("new")
+  notes     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@index([createdAt])
-  @@index([read])
 }
 
-// Blog posts
-model BlogPost {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  description String
-  content     String   @db.Text  // Full HTML content
-  image       String
-  author      String
-  readTime    String
-  published   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model Ticket {
+  id           String      @id @default(cuid())
+  name         String
+  description  String?
+  price        Float
+  currency     String      @default("BAM")
+  quantity     Int?
+  soldCount    Int         @default(0)
+  isAvailable  Boolean     @default(true)
+  isFeatured   Boolean     @default(false)
+  benefits     String?
+  validFrom    DateTime?
+  validUntil   DateTime?
+  conferenceId String?
+  conference   Conference? @relation(fields: [conferenceId], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  orders       TicketOrder[]
+}
 
-  @@index([slug])
-  @@index([published])
-  @@index([createdAt])
+model TicketOrder {
+  id                 String   @id @default(cuid())
+  ticketId           String
+  ticket             Ticket   @relation(fields: [ticketId], references: [id])
+  quantity           Int      @default(1)
+  orderNumber        String   @unique
+  couponCode         String?
+  discount           Float    @default(0)
+  subtotal           Float
+  tax                Float
+  totalPrice         Float
+  currency           String   @default("BAM")
+  buyerName          String
+  buyerEmail         String
+  buyerPhone         String?
+  buyerCompany       String?
+  status             String   @default("pending")
+  paymentMethod      String?
+  paymentId          String?
+  paymentStatus      String   @default("pending")
+  monriTransactionId String?
+  monriApprovalCode  String?
+  errorMessage       String?
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }

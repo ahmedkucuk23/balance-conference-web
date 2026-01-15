@@ -1,65 +1,23 @@
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { checkAuthorization } from "@/lib/auth-helpers"
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const { isAuthorized } = await checkAuthorization()
     const { searchParams } = new URL(request.url)
-    const conferenceId = searchParams.get('conferenceId')
-    const conferenceSlug = searchParams.get('conferenceSlug')
+    const year = searchParams.get("year")
+    const all = searchParams.get("all") // For dashboard - show all speakers
 
-    // If authorized (dashboard), return all fields including unpublished
-    if (isAuthorized) {
-      const speakers = await (db as any).speaker.findMany({
-        orderBy: { createdAt: "desc" },
-        include: {
-          conferences: {
-            include: {
-              conference: true
-            }
-          }
-        }
-      })
-
-      return NextResponse.json({ speakers })
-    }
-
-    // Build where clause for filtering
-    let whereClause: any = { published: true }
-
-    if (conferenceId || conferenceSlug) {
-      // If filtering by conference, add the relation filter
-      whereClause.conferences = {
-        some: conferenceId
-          ? { conferenceId }
-          : { conference: { slug: conferenceSlug } }
-      }
-    }
-
-    // Public endpoint - limited fields, only published speakers
-    const speakers = await (db as any).speaker.findMany({
-      where: whereClause,
-      orderBy: { createdAt: "desc" },
-      select: {
-        name: true,
-        slug: true,
-        image: true,
-        shortDescription: true,
-        location: true,
-        motto: true,
-      }
+    const speakers = await db.speaker.findMany({
+      where: {
+        ...(all !== "true" ? { isActive: true } : {}),
+        ...(year ? { year: parseInt(year) } : {}),
+      },
+      orderBy: {
+        order: "asc",
+      },
     })
 
-    return NextResponse.json(
-      { speakers },
-      {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
-        }
-      }
-    )
+    return NextResponse.json(speakers)
   } catch (error) {
     console.error("Error fetching speakers:", error)
     return NextResponse.json(
@@ -69,82 +27,37 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const { isAuthorized } = await checkAuthorization()
-    if (!isAuthorized) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const body = await request.json()
-    const {
-      name,
-      slug,
-      email,
-      location,
-      image,
-      shortDescription,
-      bio,
-      quote,
-      motto,
-      twitter,
-      linkedin,
-      instagram,
-      website,
-      published,
-      conferenceIds = [],
-    } = body
 
-    const normalizeSlug = (s: string) =>
-      s
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "")
-
-    const finalSlug = slug ? normalizeSlug(slug) : normalizeSlug(name)
-
-    // Check if slug already exists
-    const existing = await (db as any).speaker.findUnique({
-      where: { slug: finalSlug },
-    })
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "Speaker with this slug already exists" },
-        { status: 400 }
-      )
-    }
-
-    const speaker = await (db as any).speaker.create({
+    const speaker = await db.speaker.create({
       data: {
-        name,
-        slug: finalSlug,
-        email,
-        location,
-        image,
-        shortDescription,
-        bio,
-        quote,
-        motto,
-        twitter,
-        linkedin,
-        instagram,
-        website,
-        published: published ?? true,
-        conferences: {
-          create: (conferenceIds as string[]).map((conferenceId: string) => ({
-            conferenceId,
-          })),
-        },
+        slug: body.slug,
+        name: body.name,
+        topic: body.topic,
+        topic_en: body.topic_en || null,
+        bio: body.bio,
+        bio_en: body.bio_en || null,
+        details: body.details || null,
+        details_en: body.details_en || null,
+        image: body.image,
+        link: body.link || null,
+        location: body.location || null,
+        location_en: body.location_en || null,
+        jobDescription: body.jobDescription || null,
+        jobDescription_en: body.jobDescription_en || null,
+        facebook: body.facebook || null,
+        instagram: body.instagram || null,
+        linkedin: body.linkedin || null,
+        webpage: body.webpage || null,
+        review: body.review || null,
+        review_en: body.review_en || null,
+        isTbd: body.isTbd || false,
+        year: body.year || 2026,
+        order: body.order || 0,
+        isActive: body.isActive ?? true,
       },
-      include: {
-        conferences: {
-          include: {
-            conference: true
-          }
-        }
-      }
     })
 
     return NextResponse.json(speaker, { status: 201 })
@@ -156,4 +69,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-

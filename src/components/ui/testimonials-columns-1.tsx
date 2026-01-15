@@ -43,23 +43,6 @@ export const TestimonialsColumn = (props: {
                   key={`${index}-${i}`}
                 >
                   <div className="text-balance-100">{text}</div>
-                  <div className="flex items-center gap-2 mt-5">
-                    <img
-                      width={40}
-                      height={40}
-                      src={image}
-                      alt={name}
-                      className="h-10 w-10 rounded-full object-cover ring-2 ring-balance-300/30"
-                    />
-                    <div className="flex flex-col">
-                      <div className="font-medium tracking-tight leading-5 text-white">
-                        {name}
-                      </div>
-                      <div className="leading-5 opacity-60 tracking-tight text-balance-200">
-                        {role}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               ))}
             </React.Fragment>

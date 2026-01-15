@@ -2,8 +2,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import Image from "next/image";
-import { Instagram, Mail, Facebook, Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const TextHoverEffect = ({
@@ -44,7 +42,7 @@ export const TextHoverEffect = ({
       viewBox="0 0 300 100"
       xmlns="http://www.w3.org/2000/svg"
       onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
-      className={cn("select-none uppercase pointer-events-auto", className)}
+      className={cn("select-none uppercase cursor-pointer", className)}
     >
       <defs>
         <linearGradient
@@ -180,68 +178,19 @@ export const HoverFooter = () => {
     >
       <div className="absolute inset-0 bg-[#0A031B] z-0" />
       <FooterBackgroundGradient />
-      <div className="max-w-7xl mx-auto py-14 px-12 z-[60] relative">
+      <div className="max-w-7xl mx-auto p-14 z-40 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12">
           {/* Brand section */}
           <div className="flex flex-col space-y-4">
-            <Link href="/" className="flex items-center">
-              <div className="relative h-20 w-auto">
-                <Image
-                  src="/assets/img/logo-balance.png"
-                  alt="Balance Conference"
-                  width={300}
-                  height={120}
-                  className="h-full w-auto object-contain"
-                  priority
-                />
-              </div>
-            </Link>
+            <div className="flex items-center space-x-2">
+              <span className="text-balance-200 text-3xl font-extrabold">
+                &hearts;
+              </span>
+              <span className="text-white text-3xl font-bold">Balance</span>
+            </div>
             <p className="text-sm text-balance-100 leading-relaxed">
               The first BiH conference dedicated to living in balance.
             </p>
-          </div>
-
-          {/* Socials */}
-          <div>
-            <h4 className="text-white text-lg font-semibold mb-6">
-              Socials
-            </h4>
-            <div className="flex gap-4">
-              <Link
-                href="https://www.instagram.com/balanceconferencesarajevo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-balance-100 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-5 h-5" />
-              </Link>
-              <Link
-                href="mailto:balance@mita.ba"
-                className="text-balance-100 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
-                aria-label="Email"
-              >
-                <Mail className="w-5 h-5" />
-              </Link>
-              <Link
-                href="https://www.facebook.com/BalanceConference"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-balance-100 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-5 h-5" />
-              </Link>
-              <Link
-                href="https://www.youtube.com/@BalanceConferenceSarajevo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-balance-100 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
-                aria-label="YouTube"
-              >
-                <Youtube className="w-5 h-5" />
-              </Link>
-            </div>
           </div>
 
           {/* Navigation Links */}
@@ -263,6 +212,31 @@ export const HoverFooter = () => {
             </ul>
           </div>
 
+          {/* Additional Links */}
+          <div>
+            <h4 className="text-white text-lg font-semibold mb-6">
+              Resources
+            </h4>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/tickets"
+                  className="text-balance-100 hover:text-white transition-colors"
+                >
+                  Get Tickets
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/speakers"
+                  className="text-balance-100 hover:text-white transition-colors"
+                >
+                  Speakers
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Contact */}
           <div>
             <h4 className="text-white text-lg font-semibold mb-6">
@@ -277,7 +251,7 @@ export const HoverFooter = () => {
       </div>
 
       {/* Text hover effect */}
-      <div className="lg:flex hidden h-[30rem] -mt-48 -mb-40 pointer-events-none">
+      <div className="lg:flex hidden h-[30rem] -mt-48 -mb-40">
         <TextHoverEffect 
           text="BALANCE" 
           className="z-50" 

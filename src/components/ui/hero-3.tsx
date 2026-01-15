@@ -4,15 +4,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Image from "next/image";
 
 interface AnimatedMarqueeHeroProps {
   tagline: string;
   title: React.ReactNode;
   description: string;
   ctaText: string;
-  ctaLink?: string;
   images: string[];
   className?: string;
 }
@@ -22,7 +19,6 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
   title,
   description,
   ctaText,
-  ctaLink,
   images,
   className,
 }) => {
@@ -45,7 +41,7 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
-          className="mb-4 inline-block bg-card/50 px-4 py-1.5 text-sm font-medium text-muted-foreground backdrop-blur-sm"
+          className="mb-4 inline-block rounded-full border border-border bg-card/50 px-4 py-1.5 text-sm font-medium text-muted-foreground backdrop-blur-sm"
         >
           {tagline}
         </motion.div>
@@ -93,18 +89,10 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
           transition={{ delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 mt-8"
         >
-          <Link href={ctaLink || "#"}>
-            <Button size="lg" className="bg-white hover:bg-white/90 text-balance-300 border border-balance-300 rounded-lg">
-              {ctaText}
-            </Button>
-          </Link>
-          <Link href="/conferences/balance2026">
-            <Button size="lg" className="bg-balance-300 hover:bg-balance-400 text-white rounded-lg">
-              See What is Coming Next
-            </Button>
-          </Link>
+          <Button size="lg" className="bg-balance-300 hover:bg-balance-400 text-white mt-8 rounded-lg">
+            {ctaText}
+          </Button>
         </motion.div>
       </div>
 
@@ -128,13 +116,10 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
                 rotate: `${(index % 2 === 0 ? -2 : 5)}deg`,
               }}
             >
-              <Image
+              <img
                 src={src}
                 alt={`Showcase image ${index + 1}`}
-                fill
-                sizes="(max-width: 768px) 192px, 256px"
-                className="object-cover rounded-2xl shadow-md"
-                loading="lazy"
+                className="w-full h-full object-cover rounded-2xl shadow-md"
               />
             </div>
           ))}

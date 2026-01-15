@@ -1,24 +1,25 @@
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { id } = await params
     const conference = await db.conference.findUnique({
       where: { id },
+      include: {
+        speakers: true,
+        tickets: true,
+      }
     })
 
     if (!conference) {
-      return NextResponse.json({ error: "Conference not found" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Conference not found" },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json(conference)
@@ -32,67 +33,29 @@ export async function GET(
 }
 
 export async function PUT(
-  request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { id } = await params
     const body = await request.json()
-    const {
-      title,
-      slug,
-      location,
-      date,
-      description,
-      eyebrow,
-      howTitle,
-      howDescription,
-      nextChapterText,
-      participants,
-      speakersCount,
-      mediaOutlets,
-      influencers,
-      featured,
-      published,
-    } = body
-
-    // Check if slug already exists for another conference
-    if (slug) {
-      const existing = await db.conference.findUnique({
-        where: { slug },
-      })
-
-      if (existing && existing.id !== id) {
-        return NextResponse.json(
-          { error: "Conference with this slug already exists" },
-          { status: 400 }
-        )
-      }
-    }
 
     const conference = await db.conference.update({
       where: { id },
       data: {
-        title,
-        slug,
-        location,
-        date: date ? new Date(date) : null,
-        description,
-        eyebrow,
-        howTitle,
-        howDescription,
-        nextChapterText,
-        participants: participants ?? 0,
-        speakersCount: speakersCount ?? 0,
-        mediaOutlets: mediaOutlets ?? 0,
-        influencers: influencers ?? 0,
-        featured: featured ?? false,
-        published: published ?? true,
+        slug: body.slug,
+        name: body.name,
+        description: body.description || null,
+        year: body.year,
+        date: body.date ? new Date(body.date) : null,
+        endDate: body.endDate ? new Date(body.endDate) : null,
+        venue: body.venue || null,
+        address: body.address || null,
+        city: body.city || null,
+        country: body.country || null,
+        image: body.image || null,
+        isActive: body.isActive ?? true,
+        isFeatured: body.isFeatured || false,
       },
     })
 
@@ -107,15 +70,10 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { id } = await params
     await db.conference.delete({
       where: { id },
@@ -130,4 +88,3 @@ export async function DELETE(
     )
   }
 }
-

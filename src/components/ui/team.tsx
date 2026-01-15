@@ -2,14 +2,17 @@
 
 import React from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type TeamMember = {
   name: string;
   role: string;
   avatar: string;
+  topic?: string;
   link?: string;
   slug?: string;
+  isTbd?: boolean;
 };
 
 export type TeamSectionProps = {
@@ -17,6 +20,7 @@ export type TeamSectionProps = {
   members: TeamMember[];
   className?: string;
   variant?: "default" | "detailed";
+  learnMoreText?: string;
 };
 
 const defaultMembers: TeamMember[] = [
@@ -45,6 +49,7 @@ const defaultMembers: TeamMember[] = [
 export function TeamSection({
   title = "Our team",
   members = defaultMembers,
+  learnMoreText = "Learn more",
   className,
   variant = "default",
   description,
@@ -57,37 +62,40 @@ export function TeamSection({
             {members.map((member, index) => {
               const CardContent = (
                 <>
-                  <img
-                    className="h-[22.5rem] w-full rounded-xl object-cover object-top grayscale-0 transition-all duration-500 md:h-96 md:grayscale md:rounded-md md:hover:grayscale-0 md:group-hover:h-[22.5rem] md:group-hover:rounded-xl"
-                    src={member.avatar}
-                    alt={member.name}
-                    width={826}
-                    height={1239}
-                    loading="lazy"
-                  />
+                  <div className="relative overflow-hidden rounded-xl md:rounded-md md:group-hover:rounded-xl transition-all duration-500">
+                    <img
+                      className="h-[22.5rem] w-full object-cover object-top transition-all duration-500 md:h-96 md:group-hover:h-[22.5rem]"
+                      src={member.avatar}
+                      alt={member.name}
+                      width={826}
+                      height={1239}
+                      loading="lazy"
+                    />
+                    {/* TBD badge */}
+                    {member.isTbd && (
+                      <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-purple-500/80 text-white text-xs font-medium">
+                        Uskoro
+                      </div>
+                    )}
+                  </div>
                   <div className="px-2 pt-2 sm:pb-0 sm:pt-4">
-                    <div className="flex justify-between">
-                      <h3 className="text-3xl font-semibold transition-all duration-500 tracking-wider md:text-2xl md:tracking-normal md:group-hover:tracking-wider text-white">
-                        {member.name}
-                      </h3>
-                      <span className="text-xs text-balance-200">
-                        _0{index + 1}
+                    <h3 className="text-2xl font-semibold transition-all duration-500 tracking-wider md:text-xl md:tracking-normal md:group-hover:tracking-wider text-white">
+                      {member.name}
+                    </h3>
+                    <span className="text-white/60 inline-block translate-y-0 text-lg font-light opacity-100 transition duration-300 md:text-base md:translate-y-6 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 mt-1">
+                      {member.role}
+                    </span>
+                    {member.topic && (
+                      <p className="text-purple-400 text-base font-medium mt-2 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+                        {member.topic}
+                      </p>
+                    )}
+                    {member.slug && (
+                      <span className="inline-flex items-center gap-1 text-purple-300 translate-y-0 text-base tracking-wide opacity-100 transition-all duration-500 mt-3 md:translate-y-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+                        {learnMoreText}
+                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                       </span>
-                    </div>
-                    <div className="mt-1 flex items-center justify-between">
-                      <span className="text-balance-200 inline-block translate-y-0 text-lg font-light opacity-100 transition duration-300 md:text-sm md:translate-y-6 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                        {member.role}
-                      </span>
-                      {member.link && (
-                        <a
-                          href={member.link}
-                          className="text-balance-200 inline-block translate-y-0 text-sm tracking-wide opacity-100 transition-all duration-500 hover:underline md:translate-y-8 md:opacity-0 md:text-balance-100 md:group-hover:translate-y-0 md:group-hover:opacity-100"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Linktree
-                        </a>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </>
               );

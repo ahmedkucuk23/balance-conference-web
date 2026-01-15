@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
+import {Link} from "@/i18n/routing"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname } from "@/i18n/routing"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -16,139 +16,106 @@ import {
   NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { useBannerVisibility } from "@/components/blocks/announcement-banner"
+import { useTranslations } from 'next-intl'
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
 
 export interface TopNavigationProps {
   scrollThreshold?: number // Pixel value for when color should change. If undefined, uses 80% of viewport height
-  hasBanner?: boolean // Whether the page has a banner above the navigation
+  glassmorphismOnly?: boolean // If true, keeps dark glassmorphism style always (no white bar transition)
 }
 
-export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigationProps = {}) {
+export function TopNavigation({ scrollThreshold, glassmorphismOnly = false }: TopNavigationProps = {}) {
+  const t = useTranslations('nav')
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolledPastHero, setScrolledPastHero] = React.useState(false)
-  const [mounted, setMounted] = React.useState(false)
+
+  // When glassmorphismOnly is true, we never change to white bar
+  const showWhiteBar = !glassmorphismOnly && scrolledPastHero
   const pathname = usePathname()
-  const { isBannerVisible } = useBannerVisibility()
 
   React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  React.useEffect(() => {
-    let ticking = false
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          // Use custom threshold if provided, otherwise default to 80% of viewport height
-          const threshold = scrollThreshold ?? window.innerHeight * 0.8
-          setScrolledPastHero(window.scrollY > threshold)
-          ticking = false
-        })
-        ticking = true
-      }
+      // Use custom threshold if provided, otherwise default to 80% of viewport height
+      const threshold = scrollThreshold ?? window.innerHeight * 0.8
+      setScrolledPastHero(window.scrollY > threshold)
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [scrollThreshold])
 
   return (
     <>
-      <header className={cn("fixed left-0 right-0 z-[10000] w-full", hasBanner && isBannerVisible && "top-[105px] md:top-[47px]")} style={{ position: 'fixed', top: (hasBanner && isBannerVisible) ? undefined : 0, left: 0, right: 0 }}>
+      <header className="fixed top-0 left-0 right-0 z-[10000] w-full" style={{ position: 'fixed', top: 0, left: 0, right: 0 }}>
         <nav
           className={cn(
-            "w-full py-1 sm:py-1.5 transition-all duration-300 relative",
-            scrolledPastHero
-              ? "backdrop-blur-lg bg-white/90"
-              : "backdrop-blur-lg bg-balance-500/10"
+            "w-full transition-all duration-300 relative",
+            showWhiteBar
+              ? "backdrop-blur-md bg-white/80"
+              : "backdrop-blur-md bg-[#0A031B]/60"
           )}
-          style={{ minHeight: '56px' }}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 flex items-center justify-between relative z-10">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-0 relative flex-shrink-0">
-              <div className="relative h-20 sm:h-20 md:h-20 w-auto transition-all duration-300">
-                <Image
-                  src="/assets/img/logo-balance.png"
-                  alt="Balance Conference 2026"
-                  width={300}
-                  height={96}
-                  className={cn(
-                    "h-full w-auto object-contain transition-all duration-300",
-                    scrolledPastHero ? "brightness-0" : "brightness-100"
-                  )}
-                  priority
-                />
-              </div>
+            <Link href="/" className="flex items-center relative flex-shrink-0">
+              <Image
+                src="/assets/img/logo-balance.png"
+                alt="Balance Conference"
+                width={320}
+                height={80}
+                className={cn(
+                  "h-16 sm:h-20 w-auto transition-all duration-300",
+                  showWhiteBar ? "invert" : ""
+                )}
+                priority
+              />
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
-              {mounted && <NavigationMenu>
+              <NavigationMenu>
                 <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <Link href="/about" className={cn(
-                        navigationMenuTriggerStyle(),
-                        "bg-transparent transition-colors duration-300",
-                        scrolledPastHero
-                          ? "text-gray-900 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100"
-                          : "text-white hover:bg-white/10 focus:bg-white/10 active:bg-white/10"
-                      )}>
-                        About
-                      </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className={cn(
                       "bg-transparent transition-colors duration-300",
-                      scrolledPastHero
-                        ? "text-gray-900 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 data-[state=open]:bg-gray-100"
-                        : "text-white hover:bg-white/10 focus:bg-white/10 active:bg-white/10 data-[state=open]:bg-white/10"
+                      showWhiteBar
+                        ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                        : "text-white hover:bg-white/20 hover:text-white"
                     )}>
-                      Conferences
+                      {t('conferences')}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-3 p-4 bg-white">
+                      <ul className={cn(
+                        "flex flex-col w-[200px] gap-2 p-3",
+                        showWhiteBar
+                          ? "bg-white/95 backdrop-blur-md"
+                          : "bg-[#0A031B]/95 backdrop-blur-md"
+                      )}>
                         <li>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href="/conferences"
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-accent-magenta focus:bg-gray-100 focus:text-accent-gold"
-                            >
-                              <div className="text-sm font-medium leading-none text-gray-900">All Conferences</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-gray-500">
-                                View all events
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
+                          <Link
+                            href="/conferences/get-motivated-2026"
+                            className={cn(
+                              "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors",
+                              showWhiteBar
+                                ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                                : "text-white/80 hover:bg-white/20 hover:text-white"
+                            )}
+                          >
+                            <div className="text-sm font-medium leading-none">Get Motivated 2026</div>
+                          </Link>
                         </li>
                         <li>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href="/conferences/sarajevo2025"
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-accent-magenta focus:bg-gray-100 focus:text-accent-gold"
-                            >
-                              <div className="text-sm font-medium leading-none text-gray-900">Sarajevo 2025</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-gray-500">
-                                May 22, 2025
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                        <li>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href="/conferences/balance2026"
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-accent-magenta focus:bg-gray-100 focus:text-accent-gold"
-                            >
-                              <div className="text-sm font-medium leading-none text-gray-900">Balance 2026</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-gray-500">
-                                March 26, 2026
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
+                          <Link
+                            href="/conferences/find-your-balance-2025"
+                            className={cn(
+                              "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors",
+                              showWhiteBar
+                                ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                                : "text-white/80 hover:bg-white/20 hover:text-white"
+                            )}
+                          >
+                            <div className="text-sm font-medium leading-none">Find Your Balance 2025</div>
+                          </Link>
                         </li>
                       </ul>
                     </NavigationMenuContent>
@@ -159,25 +126,53 @@ export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigat
                       <Link href="/speakers" className={cn(
                         navigationMenuTriggerStyle(),
                         "bg-transparent transition-colors duration-300",
-                        scrolledPastHero
-                          ? "text-gray-900 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100"
-                          : "text-white hover:bg-white/10 focus:bg-white/10 active:bg-white/10"
+                        showWhiteBar
+                          ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                          : "text-white hover:bg-white/20 hover:text-white"
                       )}>
-                        Speakers
+                        {t('speakers')}
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="/blog" className={cn(
+                      <Link href="/sponsorship" className={cn(
                         navigationMenuTriggerStyle(),
                         "bg-transparent transition-colors duration-300",
-                        scrolledPastHero
-                          ? "text-gray-900 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100"
-                          : "text-white hover:bg-white/10 focus:bg-white/10 active:bg-white/10"
+                        showWhiteBar
+                          ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                          : "text-white hover:bg-white/20 hover:text-white"
                       )}>
-                        Blog
+                        {t('sponsorships')}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link href="/about-us" className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent transition-colors duration-300",
+                        showWhiteBar
+                          ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                          : "text-white hover:bg-white/20 hover:text-white"
+                      )}>
+                        {t('about')}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link href="/recenzije" className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent transition-colors duration-300",
+                        showWhiteBar
+                          ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                          : "text-white hover:bg-white/20 hover:text-white"
+                      )}>
+                        {t('reviews')}
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -187,16 +182,42 @@ export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigat
                       <Link href="/contact" className={cn(
                         navigationMenuTriggerStyle(),
                         "bg-transparent transition-colors duration-300",
-                        scrolledPastHero
-                          ? "text-gray-900 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100"
-                          : "text-white hover:bg-white/10 focus:bg-white/10 active:bg-white/10"
+                        showWhiteBar
+                          ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                          : "text-white hover:bg-white/20 hover:text-white"
                       )}>
-                        Contact
+                        {t('contact')}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link href="/excellence-awards" className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent transition-colors duration-300",
+                        showWhiteBar
+                          ? "text-gray-900 hover:bg-gray-100 hover:text-gray-900"
+                          : "text-white hover:bg-white/20 hover:text-white"
+                      )}>
+                        {t('excellenceAwards')}
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 </NavigationMenuList>
-              </NavigationMenu>}
+              </NavigationMenu>
+
+              <Button
+                asChild
+                className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white rounded-lg px-6 shadow-lg shadow-purple-500/25"
+              >
+                <Link href="/tickets">{t('buyTicket')}</Link>
+              </Button>
+
+              {/* Language Switcher */}
+              <div className="ml-3">
+                <LanguageSwitcher />
+              </div>
             </div>
 
             {/* Mobile Menu Button */}
@@ -204,7 +225,7 @@ export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigat
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className={cn(
                 "lg:hidden p-2 rounded-md transition-colors relative flex-shrink-0 ml-2 z-20",
-                scrolledPastHero
+                showWhiteBar
                   ? "text-gray-900 hover:bg-gray-100"
                   : "text-white hover:bg-white/10"
               )}
@@ -222,161 +243,89 @@ export function TopNavigation({ scrollThreshold, hasBanner = false }: TopNavigat
 
       {/* Mobile Menu - Outside header to avoid z-index stacking context issues */}
       {mobileMenuOpen && (
-        <div
-          className="lg:hidden fixed z-[9999] backdrop-blur-xl bg-[#0A031B]/85"
-          style={hasBanner && isBannerVisible ? {
-            top: '161px',
-            bottom: 0,
-            left: 0,
-            right: 0
-          } : {
-            top: '56px',
-            bottom: 0,
-            left: 0,
-            right: 0
-          }}
-        >
-            <div className="flex flex-col h-full w-full px-16 py-24">
-              <div className="flex flex-col space-y-8 flex-1">
-                <Link
-                  href="/"
-                  className={cn(
-                    "text-2xl font-semibold transition-all duration-300 relative",
-                    pathname === "/"
-                      ? "text-white"
-                      : "text-balance-200"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {pathname === "/" && (
-                    <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
-                  )}
-                  Home
-                </Link>
-                <Link
-                  href="/about"
-                  className={cn(
-                    "text-2xl font-semibold transition-all duration-300 relative",
-                    pathname === "/about"
-                      ? "text-white"
-                      : "text-balance-200"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {pathname === "/about" && (
-                    <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
-                  )}
-                  About
-                </Link>
-                <div className="flex flex-col space-y-4">
+        <div className="lg:hidden fixed inset-0 z-[9999] backdrop-blur-xl bg-[#0A031B]/85">
+          <div className="flex flex-col h-full w-full px-16 py-24">
+            <div className="flex flex-col space-y-8 flex-1">
+              <div className="space-y-4">
+                <div className="text-2xl font-semibold text-white/60">{t('conferences')}</div>
+                <div className="pl-4 space-y-4">
                   <Link
-                    href="/conferences"
-                    className={cn(
-                      "text-2xl font-semibold transition-all duration-300 relative",
-                      pathname === "/conferences" || pathname?.startsWith("/conferences/")
-                        ? "text-white"
-                        : "text-balance-200"
-                    )}
+                    href="/conferences/get-motivated-2026"
+                    className="block text-lg font-medium transition-all duration-300 relative text-white/60 hover:text-white"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {(pathname === "/conferences" || pathname?.startsWith("/conferences/")) && (
-                      <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
-                    )}
-                    Conferences
+                    Get Motivated 2026
                   </Link>
-                  <div className="flex flex-col space-y-3 ml-6">
-                    <Link
-                      href="/conferences/sarajevo2025"
-                      className={cn(
-                        "text-lg font-medium transition-all duration-300 relative",
-                        pathname === "/conferences/sarajevo2025"
-                          ? "text-white"
-                          : "text-balance-200"
-                      )}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {pathname === "/conferences/sarajevo2025" && (
-                        <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-balance-300" />
-                      )}
-                      Sarajevo 2025
-                    </Link>
-                    <Link
-                      href="/conferences/balance2026"
-                      className={cn(
-                        "text-lg font-medium transition-all duration-300 relative",
-                        pathname === "/conferences/balance2026"
-                          ? "text-white"
-                          : "text-balance-200"
-                      )}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {pathname === "/conferences/balance2026" && (
-                        <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-balance-300" />
-                      )}
-                      Balance 2026
-                    </Link>
-                  </div>
+                  <Link
+                    href="/conferences/find-your-balance-2025"
+                    className="block text-lg font-medium transition-all duration-300 relative text-white/60 hover:text-white"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Find Your Balance 2025
+                  </Link>
                 </div>
-                <Link
-                  href="/speakers"
-                  className={cn(
-                    "text-2xl font-semibold transition-all duration-300 relative",
-                    pathname === "/speakers" || pathname?.startsWith("/speakers/")
-                      ? "text-white"
-                      : "text-balance-200"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {(pathname === "/speakers" || pathname?.startsWith("/speakers/")) && (
-                    <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
-                  )}
-                  Speakers
-                </Link>
-                <Link
-                  href="/blog"
-                  className={cn(
-                    "text-2xl font-semibold transition-all duration-300 relative",
-                    pathname === "/blog" || pathname?.startsWith("/blog/")
-                      ? "text-white"
-                      : "text-balance-200"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {(pathname === "/blog" || pathname?.startsWith("/blog/")) && (
-                    <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
-                  )}
-                  Blog
-                </Link>
-                <Link
-                  href="/contact"
-                  className={cn(
-                    "text-2xl font-semibold transition-all duration-300 relative",
-                    pathname === "/contact"
-                      ? "text-white"
-                      : "text-balance-200"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {pathname === "/contact" && (
-                    <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-balance-300" />
-                  )}
-                  Contact
-                </Link>
               </div>
-              
-              {/* <div className="pt-8">
-                <Button
-                  asChild
-                  className="w-full bg-balance-300 hover:bg-balance-400 text-white rounded-lg"
-                >
-                  <Link href="/tickets" onClick={() => setMobileMenuOpen(false)}>
-                    Get Tickets
-                  </Link>
-                </Button>
-              </div> */}
+              <Link
+                href="/speakers"
+                className="text-2xl font-semibold transition-all duration-300 relative text-white/60 hover:text-white"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('speakers')}
+              </Link>
+              <Link
+                href="/sponsorship"
+                className="text-2xl font-semibold transition-all duration-300 relative text-white/60 hover:text-white"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('sponsorships')}
+              </Link>
+              <Link
+                href="/about-us"
+                className="text-2xl font-semibold transition-all duration-300 relative text-white/60 hover:text-white"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('about')}
+              </Link>
+              <Link
+                href="/recenzije"
+                className="text-2xl font-semibold transition-all duration-300 relative text-white/60 hover:text-white"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('reviews')}
+              </Link>
+              <Link
+                href="/contact"
+                className="text-2xl font-semibold transition-all duration-300 relative text-white/60 hover:text-white"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('contact')}
+              </Link>
+              <Link
+                href="/excellence-awards"
+                className="text-2xl font-semibold transition-all duration-300 relative text-white/60 hover:text-white"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('excellenceAwards')}
+              </Link>
+            </div>
+            <div className="pt-8 space-y-4">
+              <Button
+                asChild
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white rounded-lg shadow-lg shadow-purple-500/25"
+              >
+                <Link href="/tickets" onClick={() => setMobileMenuOpen(false)}>
+                  {t('buyTicket')}
+                </Link>
+              </Button>
+
+              {/* Mobile Language Switcher */}
+              <div className="flex justify-center">
+                <LanguageSwitcher />
+              </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
     </>
   )
 }

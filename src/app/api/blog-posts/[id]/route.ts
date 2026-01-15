@@ -1,69 +1,66 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { checkAuthorization } from "@/lib/auth-helpers"
 
-export async function PUT(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { isAuthorized } = await checkAuthorization()
-    if (!isAuthorized) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const { id } = await context.params
-    const body = await request.json()
-    const {
-      title,
-      slug,
-      description,
-      content,
-      image,
-      author,
-      readTime,
-      published,
-    } = body
-
-    const normalizeSlug = (s: string) =>
-      s
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "")
-
-    const finalSlug = slug ? normalizeSlug(slug) : normalizeSlug(title)
-
-    // Check if slug is taken by another blog post
-    const existing = await (db as any).blogPost.findFirst({
-      where: {
-        slug: finalSlug,
-        NOT: { id },
-      },
+    const { id } = await params
+    const post = await db.blogPost.findUnique({
+      where: { id },
+      include: {
+        author: {
+          select: { id: true, name: true, image: true }
+        }
+      }
     })
 
-    if (existing) {
+    if (!post) {
       return NextResponse.json(
-        { error: "Blog post with this slug already exists" },
-        { status: 400 }
+        { error: "Blog post not found" },
+        { status: 404 }
       )
     }
 
-    const blogPost = await (db as any).blogPost.update({
+    return NextResponse.json(post)
+  } catch (error) {
+    console.error("Error fetching blog post:", error)
+    return NextResponse.json(
+      { error: "Failed to fetch blog post" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const body = await request.json()
+
+    const existingPost = await db.blogPost.findUnique({ where: { id } })
+
+    const post = await db.blogPost.update({
       where: { id },
       data: {
-        title,
-        slug: finalSlug,
-        description,
-        content,
-        image,
-        author,
-        readTime,
-        published: published ?? true,
+        slug: body.slug,
+        title: body.title,
+        excerpt: body.excerpt || null,
+        content: body.content,
+        image: body.image || null,
+        authorId: body.authorId || null,
+        category: body.category || null,
+        tags: body.tags || null,
+        isPublished: body.isPublished || false,
+        isFeatured: body.isFeatured || false,
+        publishedAt: body.isPublished && !existingPost?.publishedAt ? new Date() : existingPost?.publishedAt,
       },
     })
 
-    return NextResponse.json(blogPost)
+    return NextResponse.json(post)
   } catch (error) {
     console.error("Error updating blog post:", error)
     return NextResponse.json(
@@ -74,18 +71,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { isAuthorized } = await checkAuthorization()
-    if (!isAuthorized) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const { id } = await context.params
-
-    await (db as any).blogPost.delete({
+    const { id } = await params
+    await db.blogPost.delete({
       where: { id },
     })
 

@@ -1,25 +1,21 @@
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { checkAuthorization } from "@/lib/auth-helpers"
 
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { isAuthorized } = await checkAuthorization()
-    if (!isAuthorized) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { id } = await params
-    const speaker = await (db as any).speaker.findUnique({
+    const speaker = await db.speaker.findUnique({
       where: { id },
     })
 
     if (!speaker) {
-      return NextResponse.json({ error: "Speaker not found" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Speaker not found" },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json(speaker)
@@ -33,97 +29,41 @@ export async function GET(
 }
 
 export async function PUT(
-  request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { isAuthorized } = await checkAuthorization()
-    if (!isAuthorized) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { id } = await params
     const body = await request.json()
-    const {
-      name,
-      slug,
-      email,
-      location,
-      image,
-      shortDescription,
-      bio,
-      quote,
-      motto,
-      twitter,
-      linkedin,
-      instagram,
-      website,
-      published,
-      conferenceIds,
-    } = body
 
-    const normalizeSlug = (s: string) =>
-      s
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "")
-
-    const finalSlug = slug ? normalizeSlug(slug) : undefined
-
-    // Check if slug already exists for another speaker
-    if (finalSlug) {
-      const existing = await (db as any).speaker.findUnique({
-        where: { slug: finalSlug },
-      })
-
-      if (existing && existing.id !== id) {
-        return NextResponse.json(
-          { error: "Speaker with this slug already exists" },
-          { status: 400 }
-        )
-      }
-    }
-
-    // First, delete existing conference relationships if conferenceIds is provided
-    if (conferenceIds !== undefined) {
-      await (db as any).conferenceSpeaker.deleteMany({
-        where: { speakerId: id },
-      })
-    }
-
-    const speaker = await (db as any).speaker.update({
+    const speaker = await db.speaker.update({
       where: { id },
       data: {
-        name,
-        slug: finalSlug,
-        email,
-        location,
-        image,
-        shortDescription,
-        bio,
-        quote,
-        motto,
-        twitter,
-        linkedin,
-        instagram,
-        website,
-        published,
-        ...(conferenceIds !== undefined && {
-          conferences: {
-            create: (conferenceIds as string[]).map((conferenceId: string) => ({
-              conferenceId,
-            })),
-          },
-        }),
+        slug: body.slug,
+        name: body.name,
+        topic: body.topic,
+        topic_en: body.topic_en || null,
+        bio: body.bio,
+        bio_en: body.bio_en || null,
+        details: body.details || null,
+        details_en: body.details_en || null,
+        image: body.image,
+        link: body.link || null,
+        location: body.location || null,
+        location_en: body.location_en || null,
+        jobDescription: body.jobDescription || null,
+        jobDescription_en: body.jobDescription_en || null,
+        facebook: body.facebook || null,
+        instagram: body.instagram || null,
+        linkedin: body.linkedin || null,
+        webpage: body.webpage || null,
+        review: body.review || null,
+        review_en: body.review_en || null,
+        isTbd: body.isTbd || false,
+        year: body.year || 2026,
+        order: body.order || 0,
+        isActive: body.isActive ?? true,
       },
-      include: {
-        conferences: {
-          include: {
-            conference: true
-          }
-        }
-      }
     })
 
     return NextResponse.json(speaker)
@@ -137,15 +77,10 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { isAuthorized } = await checkAuthorization()
-    if (!isAuthorized) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { id } = await params
     await db.speaker.delete({
       where: { id },
@@ -160,4 +95,3 @@ export async function DELETE(
     )
   }
 }
-

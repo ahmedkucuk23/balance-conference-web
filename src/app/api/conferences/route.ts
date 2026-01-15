@@ -1,19 +1,28 @@
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const { searchParams } = new URL(request.url)
+    const year = searchParams.get("year")
+    const active = searchParams.get("active")
 
     const conferences = await db.conference.findMany({
-      orderBy: { createdAt: "desc" },
+      where: {
+        ...(active === "true" ? { isActive: true } : {}),
+        ...(year ? { year: parseInt(year) } : {}),
+      },
+      orderBy: {
+        year: "desc",
+      },
+      include: {
+        _count: {
+          select: { speakers: true, tickets: true }
+        }
+      }
     })
 
-    return NextResponse.json({ conferences })
+    return NextResponse.json(conferences)
   } catch (error) {
     console.error("Error fetching conferences:", error)
     return NextResponse.json(
@@ -23,61 +32,25 @@ export async function GET() {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const body = await request.json()
-    const {
-      title,
-      slug,
-      location,
-      date,
-      description,
-      eyebrow,
-      howTitle,
-      howDescription,
-      nextChapterText,
-      participants,
-      speakersCount,
-      mediaOutlets,
-      influencers,
-      featured,
-      published,
-    } = body
-
-    // Check if slug already exists
-    const existing = await db.conference.findUnique({
-      where: { slug },
-    })
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "Conference with this slug already exists" },
-        { status: 400 }
-      )
-    }
 
     const conference = await db.conference.create({
       data: {
-        title,
-        slug,
-        location,
-        date: date ? new Date(date) : null,
-        description,
-        eyebrow,
-        howTitle,
-        howDescription,
-        nextChapterText,
-        participants: participants ?? 0,
-        speakersCount: speakersCount ?? 0,
-        mediaOutlets: mediaOutlets ?? 0,
-        influencers: influencers ?? 0,
-        featured: featured ?? false,
-        published: published ?? true,
+        slug: body.slug,
+        name: body.name,
+        description: body.description || null,
+        year: body.year,
+        date: body.date ? new Date(body.date) : null,
+        endDate: body.endDate ? new Date(body.endDate) : null,
+        venue: body.venue || null,
+        address: body.address || null,
+        city: body.city || null,
+        country: body.country || null,
+        image: body.image || null,
+        isActive: body.isActive ?? true,
+        isFeatured: body.isFeatured || false,
       },
     })
 
@@ -90,4 +63,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-
