@@ -494,9 +494,9 @@
     "errorLoading": "Greška pri učitavanju predavača",
     "speakerNotFound": "Predavač nije pronađen",
     "topicLabel": "Tema Predavanja",
-    "aboutSpeaker": "O predavaču",
+    "aboutSpeaker": "O predavaču/ici",
     "additionalInfo": "Dodatne informacije",
-    "ctaTitle": "Želite čuti {name} uživo?",
+    "ctaTitle": "Želite čuti predavanje uživo?",
     "ctaDescription": "Pridružite nam se na Get Motivated {year} konferenciji i saznajte više o temi \"{topic}\".",
     "buyTicket": "Kupi kartu"
   },

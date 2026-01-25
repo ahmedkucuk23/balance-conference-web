@@ -496,7 +496,7 @@
     "topicLabel": "Presentation Topic",
     "aboutSpeaker": "About the Speaker",
     "additionalInfo": "Additional Information",
-    "ctaTitle": "Want to hear {name} live?",
+    "ctaTitle": "Want to hear this talk live?",
     "ctaDescription": "Join us at the Get Motivated {year} conference and learn more about \"{topic}\".",
     "buyTicket": "Buy Ticket"
   },

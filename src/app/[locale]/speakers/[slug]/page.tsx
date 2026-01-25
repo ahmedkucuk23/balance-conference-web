@@ -318,7 +318,7 @@ export default function SpeakerPage({ params }: SpeakerPageProps) {
 
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-12 text-center">
             <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-              {t('ctaTitle', { name: speaker.name.split(' ')[0] })}
+              {t('ctaTitle')}
             </h3>
             <p className="text-white/60 mb-8 max-w-xl mx-auto">
               {t('ctaDescription', { year: speaker.year, topic: getLocalizedContent(speaker.topic, speaker.topic_en) })}
