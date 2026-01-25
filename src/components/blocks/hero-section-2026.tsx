@@ -1,53 +1,47 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {Link} from "@/i18n/routing"
 import { useTranslations } from 'next-intl'
 
 export function HeroSection2026() {
   const t = useTranslations('hero')
+  const [videoSrc, setVideoSrc] = useState<string | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    // Determine which video to load based on screen width
+    const width = window.innerWidth
+    if (width >= 1024) {
+      setVideoSrc("/assets/video/01 horisontal - za web.mp4")
+    } else if (width >= 768) {
+      setVideoSrc("/assets/video/01 tablet - za web.mp4")
+    } else {
+      setVideoSrc("/assets/video/01 vertical - za web.mp4")
+    }
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A031B]">
-      {/* Video background - Desktop */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover hidden lg:block"
-      >
-        <source src="/assets/video/01 horisontal - za web.mp4" type="video/mp4" />
-      </video>
-
-      {/* Video background - Tablet/iPad */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover hidden md:block lg:hidden"
-      >
-        <source src="/assets/video/01 tablet - za web.mp4" type="video/mp4" />
-      </video>
-
-      {/* Video background - Mobile */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover md:hidden"
-      >
-        <source src="/assets/video/01 vertical - za web.mp4" type="video/mp4" />
-      </video>
+      {/* Single video - only loads the appropriate size */}
+      {videoSrc && (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          onLoadedData={() => setIsLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
 
       {/* CTA Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.7 }}
-        className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-10 flex justify-center px-4"
+      <div
+        className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-10 flex justify-center px-4 animate-fade-in-up"
+        style={{ animationDelay: '0.7s', animationFillMode: 'both' }}
       >
         <div className="flex flex-row gap-3 sm:gap-4 items-center justify-center">
           <Button
@@ -65,7 +59,7 @@ export function HeroSection2026() {
             <Link href="/speakers">{t('speakers')}</Link>
           </Button>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

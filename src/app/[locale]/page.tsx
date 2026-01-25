@@ -2,24 +2,22 @@
 
 import { useState, useEffect } from "react"
 import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import { TopNavigation } from "@/components/blocks/top-navigation";
 import { HeroSection2026 } from "@/components/blocks/hero-section-2026";
-import { Recap2025 } from "@/components/blocks/recap-2025";
-import { NpsScore } from "@/components/blocks/nps-score";
-import { AboutConference } from "@/components/blocks/about-conference";
 import { MotivacijaSection } from "@/components/blocks/motivacija-section";
-import { BurnoutSection } from "@/components/blocks/burnout-section";
+import { SpeakersCarousel } from "@/components/ui/speakers-carousel";
 import { BenefitsCombined } from "@/components/blocks/benefits-combined";
 import { TicketIncludes } from "@/components/blocks/ticket-includes";
-import { ConferenceOffering } from "@/components/blocks/conference-offering";
-import { WhatsNew2026 } from "@/components/blocks/whats-new-2026";
-import { SpeakersCarousel } from "@/components/ui/speakers-carousel";
-import { BlogSection } from "@/components/blocks/blog-section";
 import { ContactFooter } from "@/components/blocks/contact-footer";
-import DarkVeil from "@/components/ui/dark-veil";
-import { TestimonialsColumn } from "@/components/ui/testimonials-columns-1";
-import { VideoSlider } from "@/components/ui/video-slider";
 import { SponsorsLogos } from "@/components/blocks/sponsors-logos";
+
+// Lazy load heavy components
+const DarkVeil = dynamic(() => import("@/components/ui/dark-veil"), { ssr: false });
+const Recap2025 = dynamic(() => import("@/components/blocks/recap-2025").then(mod => ({ default: mod.Recap2025 })));
+const NpsScore = dynamic(() => import("@/components/blocks/nps-score").then(mod => ({ default: mod.NpsScore })));
+const TestimonialsColumn = dynamic(() => import("@/components/ui/testimonials-columns-1").then(mod => ({ default: mod.TestimonialsColumn })));
+const VideoSlider = dynamic(() => import("@/components/ui/video-slider").then(mod => ({ default: mod.VideoSlider })));
 
 interface GalleryVideo {
   id: string
@@ -98,9 +96,11 @@ export default function Home() {
   const secondColumn = guestReviewsColumns.slice(3, 5)
   const thirdColumn = guestReviewsColumns.slice(5, 7)
 
+  const [showYouTube, setShowYouTube] = useState(false)
+
   return (
     <main className="bg-[#0A031B] min-h-screen relative">
-      {/* DarkVeil Background */}
+      {/* Single DarkVeil Background - fixed position covers everything */}
       <div className="fixed inset-0 w-full h-full z-0">
         <DarkVeil speed={0.3} />
       </div>
@@ -110,88 +110,76 @@ export default function Home() {
         <TopNavigation glassmorphismOnly />
         <HeroSection2026 />
         <MotivacijaSection />
-
-        {/* Unified background section for Speakers */}
-        <div className="relative">
-          {/* Fixed DarkVeil Background - stays on top while scrolling through speakers section */}
-          <div className="sticky top-0 w-full h-screen pointer-events-none -z-10">
-            <DarkVeil speed={0.3} />
-          </div>
-
-          <div className="relative -mt-[100vh]">
-            <SpeakersCarousel />
-          </div>
-        </div>
-
+        <SpeakersCarousel />
         <BenefitsCombined />
+        <TicketIncludes />
+        <SponsorsLogos />
+        <Recap2025 />
 
-        {/* Unified background section for Tickets, Recap, NPS, and Testimonials */}
-        <div className="relative">
-          {/* Fixed DarkVeil Background - stays on top while scrolling through these sections */}
-          <div className="sticky top-0 w-full h-screen pointer-events-none -z-10">
-            <DarkVeil speed={0.3} />
-          </div>
-
-          <div className="relative -mt-[100vh]">
-            <TicketIncludes />
-            <SponsorsLogos />
-            <Recap2025 />
-
-            {/* Full-width YouTube Video */}
-            <section className="relative py-16 sm:py-24">
-              <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12">
-                <div className="max-w-7xl mx-auto">
-                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    <iframe
-                      className="absolute top-0 left-0 w-full h-full rounded-lg"
-                      src="https://www.youtube.com/embed/Qoy23XGN5qU?si=CqPw5HcJipq746hl"
-                      title="YouTube video player"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    />
-                  </div>
-                </div>
+        {/* Lazy-loaded YouTube Video */}
+        <section className="relative py-16 sm:py-24">
+          <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+              <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                {showYouTube ? (
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    src="https://www.youtube.com/embed/Qoy23XGN5qU?si=CqPw5HcJipq746hl&autoplay=1"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <button
+                    onClick={() => setShowYouTube(true)}
+                    className="absolute top-0 left-0 w-full h-full rounded-lg bg-black/50 flex items-center justify-center group cursor-pointer border border-white/10 hover:border-purple-500/50 transition-all"
+                  >
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-purple-500/30">
+                      <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  </button>
+                )}
               </div>
-            </section>
-
-            <NpsScore />
-
-            {/* Guest Reviews Section */}
-            <section className="relative py-16 sm:py-24">
-              <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-                {/* Section header */}
-                <div className="text-center mb-16">
-                  <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm font-medium mb-4">
-                    {t('testimonialsTitle')}
-                  </span>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-                    {t('testimonialsSubtitle').split(' ')[0]}{" "}
-                    <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      {t('testimonialsSubtitle').split(' ').slice(1).join(' ')}
-                    </span>
-                  </h2>
-                  <p className="text-white/60 max-w-2xl mx-auto">
-                    {t('testimonialsDescription')}
-                  </p>
-                </div>
-
-                {/* Video Reviews Slider */}
-                {videoReviews.length > 0 && <VideoSlider videos={videoReviews} />}
-
-                {/* Testimonials columns with infinite scroll */}
-                <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
-                  <TestimonialsColumn testimonials={firstColumn} duration={15} />
-                  <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
-                  <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
-                </div>
-              </div>
-            </section>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* <ConferenceOffering /> */}
-        {/* <BlogSection /> */}
+        <NpsScore />
+
+        {/* Guest Reviews Section */}
+        <section className="relative py-16 sm:py-24">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            {/* Section header */}
+            <div className="text-center mb-16">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm font-medium mb-4">
+                {t('testimonialsTitle')}
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                {t('testimonialsSubtitle').split(' ')[0]}{" "}
+                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  {t('testimonialsSubtitle').split(' ').slice(1).join(' ')}
+                </span>
+              </h2>
+              <p className="text-white/60 max-w-2xl mx-auto">
+                {t('testimonialsDescription')}
+              </p>
+            </div>
+
+            {/* Video Reviews Slider */}
+            {videoReviews.length > 0 && <VideoSlider videos={videoReviews} />}
+
+            {/* Testimonials columns with infinite scroll */}
+            <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+              <TestimonialsColumn testimonials={firstColumn} duration={15} />
+              <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
+              <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+            </div>
+          </div>
+        </section>
+
         <ContactFooter />
       </div>
     </main>
