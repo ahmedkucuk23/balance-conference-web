@@ -732,7 +732,7 @@
     "contactUs": "Contact us",
     "packages": {
       "projectPartner": {
-        "name": "PROJECT PARTNER",
+        "name": "GOLD SPONSOR",
         "price": "14,000 BAM",
         "plusVat": "+ VAT",
         "features": {
@@ -764,7 +764,7 @@
         }
       },
       "goldSponsor": {
-        "name": "GOLD SPONSOR",
+        "name": "PROJECT PARTNER",
         "price": "4,000 BAM",
         "plusVat": "+ VAT",
         "features": {

@@ -732,7 +732,7 @@
     "contactUs": "Kontaktirajte nas",
     "packages": {
       "projectPartner": {
-        "name": "PARTNER PROJEKTA",
+        "name": "ZLATNI SPONZOR",
         "price": "14.000 KM",
         "plusVat": "+ PDV",
         "features": {
@@ -764,7 +764,7 @@
         }
       },
       "goldSponsor": {
-        "name": "ZLATNI SPONZOR",
+        "name": "PARTNER PROJEKTA",
         "price": "4.000 KM",
         "plusVat": "+ PDV",
         "features": {
