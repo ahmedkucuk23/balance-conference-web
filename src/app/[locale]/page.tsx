@@ -11,6 +11,7 @@ import { BenefitsCombined } from "@/components/blocks/benefits-combined";
 import { TicketIncludes } from "@/components/blocks/ticket-includes";
 import { ContactFooter } from "@/components/blocks/contact-footer";
 import { SponsorsLogos } from "@/components/blocks/sponsors-logos";
+import { LecturePatron } from "@/components/blocks/lecture-patron";
 
 // Lazy load heavy components
 const DarkVeil = dynamic(() => import("@/components/ui/dark-veil"), { ssr: false });
@@ -28,6 +29,7 @@ interface GalleryVideo {
 
 export default function Home() {
   const t = useTranslations('homepage')
+  const tSponsors = useTranslations('sponsorsLogos')
   const tTestimonials = useTranslations('testimonials')
   const [videoReviews, setVideoReviews] = useState<GalleryVideo[]>([])
 
@@ -108,9 +110,18 @@ export default function Home() {
       {/* Content */}
       <div className="relative z-10">
         <TopNavigation glassmorphismOnly />
+
+        {/* Partner thanks banner */}
+        <div className="bg-gradient-to-r from-purple-900/30 via-purple-800/20 to-purple-900/30 py-3 text-center">
+          <p className="text-white/80 text-sm sm:text-base px-4">
+            {tSponsors('description')}
+          </p>
+        </div>
+
         <HeroSection2026 />
         <MotivacijaSection />
         <SpeakersCarousel />
+        <LecturePatron />
         <BenefitsCombined />
         <TicketIncludes />
         <SponsorsLogos />

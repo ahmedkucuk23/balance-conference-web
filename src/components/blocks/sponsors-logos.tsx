@@ -49,64 +49,56 @@ export function SponsorsLogos() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        {/* Section header */}
+        {/* Conference Partners */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+          <h3 className="text-xl sm:text-2xl font-bold text-white mb-8">
             {t('title')}
-          </h2>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            {t('description')}
-          </p>
-        </motion.div>
+          </h3>
 
-        {/* Sponsors grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap items-center justify-center gap-8"
-        >
-          {sponsors.map((sponsor, index) => (
-            <motion.div
-              key={sponsor.name}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.4, delay: 0.1 * index }}
-              className="relative group"
-            >
-              {sponsor.url ? (
-                <a
-                  href={sponsor.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300"
-                >
-                  <Image
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    width={150}
-                    height={80}
-                    className="object-contain h-16 w-auto max-w-[150px] brightness-0 invert transition-all duration-300"
-                  />
-                </a>
-              ) : (
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <Image
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    width={150}
-                    height={80}
-                    className="object-contain h-16 w-auto max-w-[150px] brightness-0 invert transition-all duration-300"
-                  />
-                </div>
-              )}
-            </motion.div>
-          ))}
+          {/* Partners grid */}
+          <div className="flex flex-wrap items-center justify-center gap-8">
+            {sponsors.map((sponsor, index) => (
+              <motion.div
+                key={sponsor.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.4, delay: 0.1 + 0.1 * index }}
+                className="relative group"
+              >
+                {sponsor.url ? (
+                  <a
+                    href={sponsor.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300"
+                  >
+                    <Image
+                      src={sponsor.logo}
+                      alt={sponsor.name}
+                      width={150}
+                      height={80}
+                      className="object-contain h-16 w-auto max-w-[150px] brightness-0 invert transition-all duration-300"
+                    />
+                  </a>
+                ) : (
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <Image
+                      src={sponsor.logo}
+                      alt={sponsor.name}
+                      width={150}
+                      height={80}
+                      className="object-contain h-16 w-auto max-w-[150px] brightness-0 invert transition-all duration-300"
+                    />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

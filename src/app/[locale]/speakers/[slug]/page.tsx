@@ -7,6 +7,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import { TopNavigation } from '@/components/blocks/top-navigation'
 import { ContactFooter } from '@/components/blocks/contact-footer'
 import { ArrowLeft, MapPin, Loader2, Briefcase, Facebook, Instagram, Linkedin, Globe } from 'lucide-react'
+import Image from 'next/image'
 import DarkVeil from '@/components/ui/dark-veil'
 
 interface Speaker {
@@ -45,11 +46,15 @@ interface SpeakerPageProps {
 
 export default function SpeakerPage({ params }: SpeakerPageProps) {
   const t = useTranslations("speakerPage")
+  const tSponsors = useTranslations("sponsorsLogos")
   const locale = useLocale()
   const router = useRouter()
   const [speaker, setSpeaker] = useState<Speaker | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Check if this speaker is sponsored by Lukavac Cement
+  const isLukavacCementSponsor = speaker?.slug === 'janica-kostelic'
 
   // Helper function to get localized content
   const getLocalizedContent = (bsContent: string | null, enContent: string | null) => {
@@ -305,6 +310,27 @@ export default function SpeakerPage({ params }: SpeakerPageProps) {
                 <p className="text-white/70 text-lg leading-relaxed whitespace-pre-line">
                   {getLocalizedContent(speaker.details, speaker.details_en)}
                 </p>
+              </div>
+            )}
+
+            {/* Lecture Patron - Lukavac Cement */}
+            {isLukavacCementSponsor && (
+              <div className="pt-8 mt-8 border-t border-white/10">
+                <h3 className="text-xl font-bold text-purple-400 mb-6 flex items-center gap-3">
+                  <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
+                  {tSponsors('lecturePatron')}
+                </h3>
+                <div className="flex items-center gap-4">
+                  <div className="p-4 rounded-xl bg-white/5 border border-purple-500/30">
+                    <Image
+                      src="/sponsors/lukavac-cement.png"
+                      alt="Lukavac Cement"
+                      width={180}
+                      height={90}
+                      className="object-contain h-16 w-auto brightness-0 invert"
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </div>

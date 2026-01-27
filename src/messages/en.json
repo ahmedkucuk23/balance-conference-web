@@ -800,7 +800,9 @@
     }
   },
   "sponsorsLogos": {
-    "title": "Our Partners",
-    "description": "Thank you to our sponsors and partners who support Balance Conference and help us create unforgettable experiences."
+    "title": "Conference Partners",
+    "description": "We thank our partners who support Balance Conference.",
+    "goldSponsor": "Gold Sponsor",
+    "lecturePatron": "LECTURE PATRON"
   }
 }

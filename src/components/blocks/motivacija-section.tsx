@@ -6,10 +6,12 @@ import { useRef } from "react"
 import { Shield, Heart, Repeat, Brain, Scale, Sparkles } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { PhotoGallerySlider } from "./photo-gallery-slider"
+import Image from "next/image"
 
 export function MotivacijaSection() {
   const t = useTranslations('motivation')
   const tHome = useTranslations('homepage')
+  const tSponsors = useTranslations('sponsorsLogos')
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
@@ -119,6 +121,27 @@ export function MotivacijaSection() {
             </motion.div>
           ))}
         </div>
+
+        {/* Gold Sponsor */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-16 text-center"
+        >
+          <h3 className="text-xl sm:text-2xl font-bold text-yellow-400 mb-6">
+            {tSponsors('goldSponsor')}
+          </h3>
+          <div className="flex justify-center">
+            <Image
+              src="/sponsors/balans-plus.png"
+              alt="Balans+"
+              width={280}
+              height={140}
+              className="object-contain h-28 w-auto max-w-[280px] brightness-0 invert"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   )
